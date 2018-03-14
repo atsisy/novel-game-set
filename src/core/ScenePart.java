@@ -2,6 +2,7 @@ package core;
 
 import javafx.scene.text.Font;
 import parser.JsonParser;
+import parser.TextSeparator;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,10 @@ public class ScenePart {
         /*
         * すべてのテキストファイルから内容を読み出し、text_arrayに追加
          */
-        text_array_paths.stream().map(JsonParser::loadWhole).forEach(text_array::add);
+        text_array_paths.stream()
+                .map(JsonParser::loadWhole)
+                .map(TextSeparator::separateTextByMark)
+                .forEach(text_array::addAll);
 
         backGroundImage = new BackGroundImage(back_image_path, BackGroundImage.DisplayType.strToMe(back_display_mode));
         font = new Font(font_name, font_size);
