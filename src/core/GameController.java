@@ -93,6 +93,12 @@ public class GameController {
         primary_scene = sceneParts.get(current_scene);
         current_scene++; // 二枚目のシーンに向けてインクリメント
 
+
+        /*
+         * このシーンで使用するフォントに設定
+         */
+        sceneRunner.setFont(primary_scene.getFont());
+
         sceneRunner.draw(primary_scene.getText(local_scene_text_index), primary_scene.getBackGroundImage());
         local_scene_text_index++;
     }

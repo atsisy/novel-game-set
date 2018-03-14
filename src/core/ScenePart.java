@@ -42,4 +42,8 @@ public class ScenePart {
     public int lastIndexOfText(){
         return text_array.size() - 1;
     }
+
+    public Font getFont() {
+        return font;
+    }
 }
