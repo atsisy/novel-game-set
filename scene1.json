@@ -1,0 +1,28 @@
+{
+  "Scenes":[
+    {
+      "texts":[
+        "/home/takai/programs/novel/scene1.txt",
+        "/home/takai/programs/novel/scene2.txt",
+        "/home/takai/programs/novel/scene3.txt"
+      ],
+
+      "back-ground":"/home/takai/programs/novel/test.png",
+      "bg-display-mode":"CENTER",
+      "font-name":"Ricty",
+      "font-size": 12
+    },
+
+    {
+      "texts":[
+        "scene3.txt",
+        "scene4.txt"
+      ],
+
+      "back-ground":"./image/back.png",
+      "bg-display-mode":"CENTER",
+      "font-name":"Ricty",
+      "font-size": 12
+    }
+  ]
+}
