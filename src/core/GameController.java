@@ -15,7 +15,7 @@ public class GameController {
     private int current_scene;
     private int local_scene_text_index;
     private ScenePart primary_scene;
-    SceneRunner sceneRunner;
+    private SceneRunner sceneRunner;
     private Scene scene;
     private Stage stage;
     private AnchorPane root;

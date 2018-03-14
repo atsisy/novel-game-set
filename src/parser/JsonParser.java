@@ -52,21 +52,39 @@ public class JsonParser {
             });
 
             /*
+            * font情報を取り出す
+             */
+
+            /*
             * あとは一気にパースして新規追加
              */
             result.add(new ScenePart(
                     text_array,
                     local_json.get("back-ground").asString(),
                     local_json.get("bg-display-mode").asString(),
-                    new FontData(
-                            local_json.get("font-name").asString(),
-                            local_json.get("font-size").asInt(),
-                            local_json.get("font-color").asString()
-                    )
+                    parseFontData(local_json)
             ));
         });
 
         return result;
+    }
+
+    /*
+    * フォントデータ読み取り専用のメソッド
+    * このメソッドに渡すJsonObjectは、1シーン分のjsonの塊
+     */
+    private static FontData parseFontData(JsonObject object){
+        /*
+        * 1シーン分のJsonから、font項を取り出す。
+        * 構造体のような形式で手に入る
+         */
+        final JsonObject local_json = object.get("font").asObject();
+
+        return new FontData(
+                local_json.get("name").asString(),
+                local_json.get("size").asInt(),
+                local_json.get("color").asString()
+        );
     }
 
 }
