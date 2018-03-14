@@ -19,11 +19,13 @@ public class GameController {
     private Scene scene;
     private Stage stage;
     private AnchorPane root;
+    private boolean audio_playing;
 
     public GameController(Stage stage, ArrayList<String> json_paths){
 
         current_scene = 0;
         local_scene_text_index = 0;
+        audio_playing = false;
         sceneParts = new ArrayList<>();
 
         /*
@@ -88,6 +90,11 @@ public class GameController {
         local_scene_text_index = 0;
 
         /*
+        * 古いシーンとなるprimary_sceneのBGMを停止
+         */
+        stopPrimarySceneAudio();
+
+        /*
          * 最初のシーンを呼び起こし
          */
         primary_scene = sceneParts.get(current_scene);
@@ -101,6 +108,11 @@ public class GameController {
 
         sceneRunner.draw(primary_scene.getText(local_scene_text_index), primary_scene.getBackGroundImage());
         local_scene_text_index++;
+
+        /*
+        * 新しいシーンのBGMを再生
+         */
+        playPrimarySceneAudio();
     }
 
     private SceneRunner.Status next(){
@@ -140,5 +152,23 @@ public class GameController {
         }
 
         return SceneRunner.Status.IN_PROCESS;
+    }
+
+    private void playPrimarySceneAudio(){
+        /*
+        * 他のシーンのBGMが流れているときは、実行しない
+         */
+        if(!audio_playing) {
+            audio_playing = primary_scene.playAudio();
+        }
+    }
+
+    private void stopPrimarySceneAudio(){
+        /*
+        * そもそも音楽が流れていないときは実しない
+         */
+        if(audio_playing) {
+            audio_playing = !primary_scene.stopAudio();
+        }
     }
 }

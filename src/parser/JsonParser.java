@@ -10,9 +10,12 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class JsonParser {
+
+    private static final String DISABLE_KEYWORD = "-NO";
 
     public static String loadWhole(String file_path){
         /*
@@ -52,17 +55,14 @@ public class JsonParser {
             });
 
             /*
-            * font情報を取り出す
-             */
-
-            /*
             * あとは一気にパースして新規追加
              */
             result.add(new ScenePart(
                     text_array,
                     local_json.get("back-ground").asString(),
                     local_json.get("bg-display-mode").asString(),
-                    parseFontData(local_json)
+                    parseFontData(local_json),
+                    Optional.ofNullable(judgeBGMData(local_json.get("bgm").asString()))
             ));
         });
 
@@ -85,6 +85,10 @@ public class JsonParser {
                 local_json.get("size").asInt(),
                 local_json.get("color").asString()
         );
+    }
+
+    private static String judgeBGMData(String word){
+        return word.equals(DISABLE_KEYWORD) ? null : word;
     }
 
 }
