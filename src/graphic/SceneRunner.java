@@ -2,6 +2,7 @@ package graphic;
 
 import core.BackGroundImage;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class SceneRunner {
@@ -46,8 +47,9 @@ public class SceneRunner {
         TextLayer.getGraphicsContext().fillText(text, 20, 20);
     }
 
-    public void setFont(Font font){
+    public void setFont(Font font, Color color){
         TextLayer.getGraphicsContext().setFont(font);
+        TextLayer.getGraphicsContext().setFill(color);
     }
 
     public void allClear(){

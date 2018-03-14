@@ -2,6 +2,7 @@ package parser;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
+import core.FontData;
 import core.ScenePart;
 
 import java.io.IOException;
@@ -57,8 +58,11 @@ public class JsonParser {
                     text_array,
                     local_json.get("back-ground").asString(),
                     local_json.get("bg-display-mode").asString(),
-                    local_json.get("font-name").asString(),
-                    local_json.get("font-size").asInt()
+                    new FontData(
+                            local_json.get("font-name").asString(),
+                            local_json.get("font-size").asInt(),
+                            local_json.get("font-color").asString()
+                    )
             ));
         });
 

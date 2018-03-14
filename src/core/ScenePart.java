@@ -11,10 +11,9 @@ public class ScenePart {
 
     private ArrayList<String> text_array;
     private BackGroundImage backGroundImage;
-    private Font font;
-    private Color font_color;
+    private FontData fontData;
 
-    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, String font_name, int font_size, String font_color_html) {
+    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData) {
         /*
         * コンストラクタ
         * JsonParserに実行してもらう
@@ -30,8 +29,11 @@ public class ScenePart {
                 .forEach(text_array::addAll);
 
         backGroundImage = new BackGroundImage(back_image_path, BackGroundImage.DisplayType.strToMe(back_display_mode));
-        font = new Font(font_name, font_size);
-        font_color = Color.web(font_color_html);
+
+        /*
+        * フォントデータ格納
+         */
+        this.fontData = fontData;
     }
 
     public String getText(int index){
@@ -47,10 +49,10 @@ public class ScenePart {
     }
 
     public Font getFont() {
-        return font;
+        return fontData.getFont();
     }
 
     public Color getFontColor() {
-        return font_color;
+        return fontData.getColor();
     }
 }
