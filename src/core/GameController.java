@@ -49,13 +49,23 @@ public class GameController {
         * Enterキー入力時の動作
          */
         this.scene.setOnKeyReleased(event -> {
-            if(event.getCode().equals(KeyCode.ENTER)){
+            if(isProceedKey(event.getCode())){
                 if(next().eqauls(SceneRunner.Status.FINISH)){
                     nextScene();
                 }
+            }else if(isBackKey(event.getCode())){
+                back();
             }
         });
 
+    }
+
+    private boolean isProceedKey(KeyCode code){
+        return code.equals(KeyCode.ENTER) || code.equals(KeyCode.RIGHT);
+    }
+
+    private boolean isBackKey(KeyCode code){
+        return code.equals(KeyCode.BACK_SPACE) || code.equals(KeyCode.LEFT);
     }
 
     public void start(){
@@ -102,6 +112,25 @@ public class GameController {
             local_scene_text_index++;
         }else{
             return SceneRunner.Status.FINISH;
+        }
+
+        return SceneRunner.Status.IN_PROCESS;
+    }
+
+    private SceneRunner.Status back(){
+        if(local_scene_text_index >= 2){
+            /*
+             * 負の数には到達していない
+             */
+
+            /*
+             * 画面消去
+             */
+            sceneRunner.clearTextLayer();
+
+
+            local_scene_text_index -= 2;
+            sceneRunner.draw(primary_scene.getText(local_scene_text_index), primary_scene.getBackGroundImage());
         }
 
         return SceneRunner.Status.IN_PROCESS;
