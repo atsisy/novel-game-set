@@ -1,5 +1,6 @@
 package core;
 
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import parser.JsonParser;
 import parser.TextSeparator;
@@ -11,8 +12,9 @@ public class ScenePart {
     private ArrayList<String> text_array;
     private BackGroundImage backGroundImage;
     private Font font;
+    private Color font_color;
 
-    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, String font_name, int font_size) {
+    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, String font_name, int font_size, String font_color_html) {
         /*
         * コンストラクタ
         * JsonParserに実行してもらう
@@ -29,6 +31,7 @@ public class ScenePart {
 
         backGroundImage = new BackGroundImage(back_image_path, BackGroundImage.DisplayType.strToMe(back_display_mode));
         font = new Font(font_name, font_size);
+        font_color = Color.web(font_color_html);
     }
 
     public String getText(int index){
@@ -45,5 +48,9 @@ public class ScenePart {
 
     public Font getFont() {
         return font;
+    }
+
+    public Color getFontColor() {
+        return font_color;
     }
 }

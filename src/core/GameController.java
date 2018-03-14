@@ -97,7 +97,7 @@ public class GameController {
         /*
          * このシーンで使用するフォントに設定
          */
-        sceneRunner.setFont(primary_scene.getFont());
+        sceneRunner.setFont(primary_scene.getFont(), primary_scene.getFontColor());
 
         sceneRunner.draw(primary_scene.getText(local_scene_text_index), primary_scene.getBackGroundImage());
         local_scene_text_index++;
