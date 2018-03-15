@@ -1,6 +1,7 @@
 package graphic;
 
 import core.BackGroundImage;
+import core.HighGradeText;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -47,6 +48,33 @@ public class SceneRunner {
         TextLayer.getGraphicsContext().fillText(text, 20, 20);
     }
 
+    public void draw(HighGradeText high_text, BackGroundImage bg_image){
+        backGroundImageLayer.getGraphicsContext().drawImage(bg_image.getImage(), 0, 0);
+        TextDrawer textDrawer = new TextDrawer(20, 20);
+
+        //TextLayer.getGraphicsContext().fillText(text, 20, 20);
+
+        high_text.stream().forEach(highGradeTextPart -> {
+            highGradeTextPart.activeFeatureStream(featureType -> {
+                switch (featureType){
+                    case COLOR:
+                        TextLayer.getGraphicsContext().setFill(highGradeTextPart.getColor());
+                        break;
+                    case RUBY:
+                        break;
+                    case TEXT:
+                        /*
+                        * ここでは文字描画処理は行わない
+                         */
+                        break;
+                    case UNKNOWN:
+                        break;
+                }
+            });
+            textDrawer.draw(TextLayer, highGradeTextPart.getText());
+        });
+    }
+
     public void setFont(Font font, Color color){
         TextLayer.getGraphicsContext().setFont(font);
         TextLayer.getGraphicsContext().setFill(color);
@@ -60,4 +88,5 @@ public class SceneRunner {
     public void clearTextLayer(){
         TextLayer.clear();
     }
+
 }

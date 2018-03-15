@@ -2,6 +2,7 @@ package core;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import parser.HighGradeTextInterpreter;
 import parser.JsonParser;
 import parser.TextSeparator;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 public class ScenePart {
 
-    private ArrayList<String> text_array;
+    private ArrayList<HighGradeText> text_array;
     private BackGroundImage backGroundImage;
     private FontData fontData;
     private AudioPlayer audioPlayer;
@@ -28,6 +29,20 @@ public class ScenePart {
         text_array_paths.stream()
                 .map(JsonParser::loadWhole)
                 .map(TextSeparator::separateTextByMark)
+                .map(value -> {
+                    /*
+                    * ここでやっていること
+                    * セパレータによって分割された文字列のシーンごとに区切られたものが次々と放られてくる
+                    * valueはArrayList(1シーン分の複数のセパレートされたブロック)
+                    * セパレートされたブロック一つを1つのHighGradeTextで表す
+                    * これをArrayListにして返す
+                     */
+                    ArrayList<HighGradeText> result = new ArrayList<>();
+                    HighGradeTextInterpreter interpreter = new HighGradeTextInterpreter();
+
+                    value.forEach(s -> {result.add(interpreter.parseToHighGradeText(s));});
+                    return result;
+                })
                 .forEach(text_array::addAll);
 
         backGroundImage = new BackGroundImage(back_image_path, BackGroundImage.DisplayType.strToMe(back_display_mode));
@@ -41,9 +56,14 @@ public class ScenePart {
         * audioプレイヤーを初期化
          */
         audioPlayer = new AudioPlayer(bgm_path);
+
+        /*
+        * 拡張されてないものを、デフォルトの状態に設定する
+         */
+        text_array.forEach(highGradeText -> highGradeText.setDefaultTextStatus(fontData.getColor()));
     }
 
-    public String getText(int index){
+    public HighGradeText getHighGradeText(int index){
         return text_array.get(index);
     }
 

@@ -106,7 +106,7 @@ public class GameController {
          */
         sceneRunner.setFont(primary_scene.getFont(), primary_scene.getFontColor());
 
-        sceneRunner.draw(primary_scene.getText(local_scene_text_index), primary_scene.getBackGroundImage());
+        sceneRunner.draw(primary_scene.getHighGradeText(local_scene_text_index), primary_scene.getBackGroundImage());
         local_scene_text_index++;
 
         /*
@@ -126,7 +126,7 @@ public class GameController {
             /*
             * 最期のテキストには到達していない
              */
-            sceneRunner.draw(primary_scene.getText(local_scene_text_index), primary_scene.getBackGroundImage());
+            sceneRunner.draw(primary_scene.getHighGradeText(local_scene_text_index), primary_scene.getBackGroundImage());
             local_scene_text_index++;
         }else{
             return SceneRunner.Status.FINISH;
@@ -148,7 +148,7 @@ public class GameController {
 
 
             local_scene_text_index -= 2;
-            sceneRunner.draw(primary_scene.getText(local_scene_text_index), primary_scene.getBackGroundImage());
+            sceneRunner.draw(primary_scene.getHighGradeText(local_scene_text_index), primary_scene.getBackGroundImage());
         }
 
         return SceneRunner.Status.IN_PROCESS;
