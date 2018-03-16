@@ -3,6 +3,7 @@ package parser;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import core.FontData;
+import core.SceneBasicInfo;
 import core.ScenePart;
 
 import java.io.IOException;
@@ -62,6 +63,10 @@ public class JsonParser {
                     local_json.get("back-ground").asString(),
                     local_json.get("bg-display-mode").asString(),
                     parseFontData(local_json),
+                    new SceneBasicInfo(
+                            local_json.get("title").asString(),
+                            local_json.get("hash-name").asString()
+                    ),
                     Optional.ofNullable(judgeBGMData(local_json.get("bgm").asString()))
             ));
         });

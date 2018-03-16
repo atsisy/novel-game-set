@@ -15,8 +15,9 @@ public class ScenePart {
     private BackGroundImage backGroundImage;
     private FontData fontData;
     private AudioPlayer audioPlayer;
+    private SceneBasicInfo basicInfo;
 
-    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, Optional<String> bgm_path) {
+    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, Optional<String> bgm_path) {
         /*
         * コンストラクタ
         * JsonParserに実行してもらう
@@ -58,6 +59,11 @@ public class ScenePart {
         audioPlayer = new AudioPlayer(bgm_path);
 
         /*
+        * SceneBasicInfoを初期化
+         */
+        this.basicInfo = basicInfo;
+
+        /*
         * 拡張されてないものを、デフォルトの状態に設定する
          */
         text_array.forEach(highGradeText -> highGradeText.setDefaultTextStatus(fontData.getColor()));
@@ -89,5 +95,10 @@ public class ScenePart {
 
     public boolean stopAudio(){
         return audioPlayer.stop();
+    }
+
+    @Override
+    public int hashCode(){
+        return basicInfo.getHash();
     }
 }
