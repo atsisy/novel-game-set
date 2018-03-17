@@ -4,7 +4,9 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import core.FontData;
 import core.SceneBasicInfo;
-import core.ScenePart;
+import core.scenes.ChoiceScene;
+import core.scenes.PlainTextScene;
+import core.scenes.ScenePart;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -58,7 +60,9 @@ public class JsonParser {
             /*
             * あとは一気にパースして新規追加
              */
-            result.add(new ScenePart(
+            result.add(createScene(
+                    local_json,
+                    local_json.get("type").asString(),
                     text_array,
                     local_json.get("back-ground").asString(),
                     local_json.get("bg-display-mode").asString(),
@@ -67,7 +71,7 @@ public class JsonParser {
                             local_json.get("title").asString(),
                             local_json.get("hash-name").asString()
                     ),
-                    Optional.ofNullable(judgeBGMData(local_json.get("bgm").asString()))
+                    judgeBGMData(local_json.get("bgm").asString())
             ));
         });
 
@@ -96,4 +100,52 @@ public class JsonParser {
         return word.equals(DISABLE_KEYWORD) ? null : word;
     }
 
+    /**
+     * createSceneメソッド
+     * ScenePartを継承したクラスのインスタンスを生成する専用メソッド
+     * @param json_scene_type
+     * @param text_array_paths
+     * @param back_image_path
+     * @param back_display_mode
+     * @param fontData
+     * @param basicInfo
+     * @param bgm_path
+     * @return
+     */
+    private static ScenePart createScene(
+            JsonObject local_json_object,
+            String json_scene_type,
+            ArrayList<String> text_array_paths,
+            String back_image_path,
+            String back_display_mode,
+            FontData fontData,
+            SceneBasicInfo basicInfo,
+            String bgm_path)
+    {
+        switch(ScenePart.SceneType.strToMe(json_scene_type)){
+            case PLAIN_TEXT:
+                return new PlainTextScene(
+                        text_array_paths,
+                        back_image_path,
+                        back_display_mode,
+                        fontData,
+                        basicInfo,
+                        Optional.ofNullable(bgm_path)
+                );
+            case CHOICE:
+                return new ChoiceScene(
+                        text_array_paths,
+                        back_image_path,
+                        back_display_mode,
+                        fontData,
+                        basicInfo,
+                        Optional.ofNullable(bgm_path)
+                );
+        }
+
+        System.err.println(
+                "ERROR: UNKNOWN TYPE OF SCENE!! @parser.JsonParser#createScene"
+        );
+        return null;
+    }
 }

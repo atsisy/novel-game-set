@@ -1,5 +1,6 @@
 package core;
 
+import core.scenes.ScenePart;
 import graphic.SceneRunner;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
