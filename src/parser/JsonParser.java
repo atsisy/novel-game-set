@@ -130,7 +130,8 @@ public class JsonParser {
                         back_display_mode,
                         fontData,
                         basicInfo,
-                        Optional.ofNullable(bgm_path)
+                        Optional.ofNullable(bgm_path),
+                        local_json_object.get("next-scene-hash").asString().hashCode()
                 );
             case CHOICE:
                 return new ChoiceScene(

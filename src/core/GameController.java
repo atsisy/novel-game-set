@@ -1,5 +1,7 @@
 package core;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import core.scenes.ScenePart;
 import graphic.SceneRunner;
 import javafx.scene.Scene;
@@ -9,11 +11,16 @@ import javafx.stage.Stage;
 import parser.JsonParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
+import static parser.JsonParser.loadWhole;
 
 public class GameController {
 
     private ArrayList<ScenePart> sceneParts;
-    private int current_scene;
+    private HashMap<Integer, ScenePart> scenePartsMap;
+    private int current_scene_hash;
     private int local_scene_text_index;
     private ScenePart primary_scene;
     private SceneRunner sceneRunner;
@@ -22,17 +29,22 @@ public class GameController {
     private AnchorPane root;
     private boolean audio_playing;
 
-    public GameController(Stage stage, ArrayList<String> json_paths){
+    public GameController(Stage stage, String scenes_path){
 
-        current_scene = 0;
         local_scene_text_index = 0;
         audio_playing = false;
         sceneParts = new ArrayList<>();
+        scenePartsMap = new HashMap<>();
+
+        ArrayList<String> json_paths = extractInitScenesJson(scenes_path);
 
         /*
         * jsonへのパスのリスト => ArrayList<ScenePart>にパース -> 連結
          */
         json_paths.stream().map(JsonParser::parseToSceneParts).forEach(sceneParts::addAll);
+        json_paths.stream().map(JsonParser::parseToSceneParts).forEach(part -> {
+            part.forEach(local_scene -> scenePartsMap.put(local_scene.hashCode(), local_scene));
+        });
 
         /*
         * rootとなるAnchorPaneのインスタンス生成
@@ -54,6 +66,7 @@ public class GameController {
         this.scene.setOnKeyReleased(event -> {
             if(isProceedKey(event.getCode())){
                 if(next().eqauls(SceneRunner.Status.FINISH)){
+                    current_scene_hash = primary_scene.nextSceneHash();
                     nextScene();
                 }
             }else if(isBackKey(event.getCode())){
@@ -98,9 +111,7 @@ public class GameController {
         /*
          * 最初のシーンを呼び起こし
          */
-        primary_scene = sceneParts.get(current_scene);
-        current_scene++; // 二枚目のシーンに向けてインクリメント
-
+        primary_scene = scenePartsMap.get(current_scene_hash);
 
         /*
          * このシーンで使用するフォントに設定
@@ -171,5 +182,25 @@ public class GameController {
         if(audio_playing) {
             audio_playing = !primary_scene.stopAudio();
         }
+    }
+
+    private ArrayList<String> extractInitScenesJson(String json_path){
+        ArrayList<String> json_sp_paths = new ArrayList<>();
+
+        /*
+         * 大本のJSONファイルオブジェクト
+         */
+        final JsonObject json = Json.parse(loadWhole(json_path)).asObject();
+
+        /*
+         * JsonArrayからシーン設定ファイルが書き込まれたJsonファイルへのパスを読み込み
+         */
+        json.get("paths").asArray().forEach(jsonValue -> {
+            json_sp_paths.add(jsonValue.asString());
+        });
+
+        current_scene_hash = json.get("first-scene-hash").asString().hashCode();
+
+        return json_sp_paths;
     }
 }

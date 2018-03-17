@@ -14,7 +14,7 @@ public class PlainTextScene extends ScenePart {
 
     private int next_scene_hash;
 
-    public PlainTextScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, Optional<String> bgm_path){
+    public PlainTextScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, Optional<String> bgm_path, int next_scene_hash){
         /*
         * スーパクラスを初期化
         * その後、シーンタイプを設定
@@ -47,6 +47,11 @@ public class PlainTextScene extends ScenePart {
          * 拡張されてないものを、デフォルトの状態に設定する
          */
         text_array.forEach(highGradeText -> highGradeText.setDefaultTextStatus(fontData.getColor()));
+
+        /*
+        * このシーンが終わったあとを定義
+         */
+        this.next_scene_hash = next_scene_hash;
 
         /*
         * シーンタイプはプレーンテキスト

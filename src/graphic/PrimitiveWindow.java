@@ -23,7 +23,7 @@ public class PrimitiveWindow extends Application implements SystemInitializer {
          */
         StageInit("./setting.json", primaryStage);
 
-        GameController controller = new GameController(primaryStage, getJsonScenePaths("./scenes.json"));
+        GameController controller = new GameController(primaryStage, "./scenes.json");
 
         primaryStage.show();
 

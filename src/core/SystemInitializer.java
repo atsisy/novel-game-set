@@ -28,22 +28,4 @@ public interface SystemInitializer {
         stage.setTitle(json.get("title").asString());
     }
 
-    default ArrayList<String> getJsonScenePaths(String json_path){
-        ArrayList<String> json_sp_paths = new ArrayList<>();
-
-        /*
-         * 大本のJSONファイルオブジェクト
-         */
-        final JsonObject json = Json.parse(loadWhole(json_path)).asObject();
-
-        /*
-        * JsonArrayからシーン設定ファイルが書き込まれたJsonファイルへのパスを読み込み
-         */
-        json.get("paths").asArray().forEach(jsonValue -> {
-            json_sp_paths.add(jsonValue.asString());
-        });
-
-        return json_sp_paths;
-    }
-
 }
