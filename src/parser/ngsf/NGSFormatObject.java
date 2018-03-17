@@ -1,4 +1,4 @@
-package parser;
+package parser.ngsf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,8 +43,6 @@ public class NGSFormatObject {
                 features.add(builder.toString());
                 builder.setLength(0);
 
-                // 記録完了
-                feat_record_on = false;
                 continue;
             }
 
@@ -136,4 +134,7 @@ public class NGSFormatObject {
         return expressions.stream();
     }
 
+    public String get(String left){
+        return has(left) ? data_table.get(left) : null;
+    }
 }

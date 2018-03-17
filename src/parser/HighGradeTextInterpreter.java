@@ -2,17 +2,16 @@ package parser;
 
 import core.HighGradeText;
 import core.HighGradeTextPart;
-
-import java.util.ArrayList;
+import parser.ngsf.NGSFormatObject;
 
 public class HighGradeTextInterpreter {
 
     /*
     * 文章を拡張するための指定子
      */
-    private static final String SPECIFY_BEGIN_FORMAT = "[|";
-    private static final String SPECIFY_END_FORMAT = "|]";
-    private static final String END_FORMAT = "[|END|]";
+    public static final String SPECIFY_BEGIN_FORMAT = "[|";
+    public static final String SPECIFY_END_FORMAT = "|]";
+    public static final String END_FORMAT = "[|END|]";
 
     /**
      * parseToHighGradeTextメソッド
@@ -92,12 +91,6 @@ public class HighGradeTextInterpreter {
         int point_of_begining_end_feat = end_index - END_FORMAT.length();
 
         /*
-        * 拡張指定子を式の形式の文字列で保存しておく features
-        * XX=YY
-         */
-        ArrayList<String> features = new ArrayList<>();
-
-        /*
         * 結果を格納するためのインスタンスを生成
          */
         HighGradeTextPart result = new HighGradeTextPart(true);
@@ -120,61 +113,21 @@ public class HighGradeTextInterpreter {
         // それを格納
         result.setText(text_area);
 
-        // builder初期化
-        StringBuilder builder = new StringBuilder();
-
         /*
-        * 一文字目は、ループ外で判定
-        * '|'であれば、記録開始
+        * NGSFormat形式の式をパーサに渡し、処理を行う
          */
-        feat_record_on = feature_area.charAt(0) == '|';
-        for(int i = 1;i < feature_area.length();i++){
-
-            /*
-            * 記録中かつ、現在の文字が'|'だった場合、記録を完了し、式をfeaturesに追加
-             */
-            if(feat_record_on && feature_area.charAt(i) == '|'){
-                /*
-                * builderから文字列生成
-                * その後、builderをリセット
-                 */
-                features.add(builder.toString());
-                builder.setLength(0);
-
-                // 記録完了
-                feat_record_on = false;
-                continue;
-            }
-
-            if(feat_record_on){
-                /*
-                * 記録中フラグが立っているので、現在の文字を記録する
-                 */
-                builder.append(feature_area.charAt(i));
-            }else{
-                /*
-                * 記録を開始すべきか確認する
-                 */
-                feat_record_on = feature_area.charAt(i) == '|';
-            }
-        }
-
-        /*
-        * 拡張の内容がか書かれた式を評価していく
-         */
-        for(String local_word : features){
-            /*
-            * どの拡張情報か判定後、設定を行う
-             */
-            switch (what_feat(local_word)){
+        NGSFormatObject ngs_object = NGSFormatObject.parseNGSFormat(feature_area);
+        ngs_object.stream().forEach(ngsExpression -> {
+            String right_one = ngsExpression.getRight();
+            switch(what_feat(ngsExpression.getLeft())){
                 case COLOR:
-                    result.setColor(getRightValue(local_word));
+                    result.setColor(right_one);
                     break;
                 case RUBY:
-                    result.setRuby(getRightValue(local_word));
+                    result.setRuby(right_one);
                     break;
             }
-        }
+        });
 
         // 完了
         return result;
@@ -182,24 +135,15 @@ public class HighGradeTextInterpreter {
 
     /**
      * what_featメソッド
-     * XX=YYのような文字列を渡してください
-     * @param text 式 XX=YY形式
+     * 左辺を渡してください
+     * @param left_value 式 XX=YY形式
      * @return 左辺はどの拡張情報のためのものだったか
      */
-    private HighGradeTextPart.FeatureType what_feat(String text){
-        StringBuilder builder = new StringBuilder();
-
-        /*
-        * '='が来るまでの文字列を記録することで、左辺のみを取り出す
-         */
-        for(int i = 0;i < text.length() && text.charAt(i) != '=';i++){
-            builder.append(text.charAt(i));
-        }
-
+    private HighGradeTextPart.FeatureType what_feat(String left_value){
         /*
         * FeatureType#strToMeでFeatureTypeに変換
          */
-        return HighGradeTextPart.FeatureType.strToMe(builder.toString());
+        return HighGradeTextPart.FeatureType.strToMe(left_value);
     }
 
     /**
