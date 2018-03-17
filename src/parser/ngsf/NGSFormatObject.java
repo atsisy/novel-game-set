@@ -134,6 +134,11 @@ public class NGSFormatObject {
         return expressions.stream();
     }
 
+    /**
+     * getメソッド
+     * @param left 知りたい右辺値と対応した左辺値の文字列
+     * @return 引数の左辺値が存在していれば、対応する右辺値を返し、そうでなければnullを返す
+     */
     public String get(String left){
         return has(left) ? data_table.get(left) : null;
     }

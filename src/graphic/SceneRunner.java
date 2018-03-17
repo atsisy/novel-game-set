@@ -57,7 +57,6 @@ public class SceneRunner {
         backGroundImageLayer.getGraphicsContext().drawImage(bg_image.getImage(), 0, 0);
         TextDrawer textDrawer = new TextDrawer(20, 20);
 
-        //TextLayer.getGraphicsContext().fillText(text, 20, 20);
 
         high_text.stream().forEach(highGradeTextPart -> {
             highGradeTextPart.activeFeatureStream(featureType -> {
