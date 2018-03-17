@@ -89,6 +89,12 @@ public class ChoiceScene extends ScenePart {
         return items;
     }
 
+    /**
+     * extractChoiceItemメソッド
+     *
+     * @param text_part
+     * @return
+     */
     private static ChoiceItem extractChoiceItem(String text_part){
         int begin_text = text_part.indexOf(SPECIFY_END_FORMAT) + SPECIFY_END_FORMAT.length();
         NGSFormatObject ngsf_object = NGSFormatObject.parseNGSFormat(text_part.substring(0, begin_text));
@@ -99,34 +105,77 @@ public class ChoiceScene extends ScenePart {
         );
     }
 
+    /**
+     * removeChoiceメソッド
+     * 本文の中から、選択肢情報が書かれたNGSFを取り除くメソッド
+     * @param text 本文
+     * @return 取り除かれた文字列
+     */
     private static String removeChoiceNGSF(String text){
         NGSFormatObject object;
         StringBuilder builder = new StringBuilder();
 
+        /*
+        * "[|END|]"これがなくなるまでループ
+        * 判定済みの文字列はStringBuilderで再構築するため、text変数の文字列はだんだん短くなっていき、
+        * 最終的に0になる
+         */
         while(text.contains(END_FORMAT)){
             String one_part;
 
+            /*
+            * NGSFヘッダ側の文字列を抽出 & 解析
+             */
             object = NGSFormatObject.parseNGSFormat(text.substring(
                     text.indexOf(SPECIFY_BEGIN_FORMAT),
                     text.indexOf(SPECIFY_END_FORMAT) + SPECIFY_BEGIN_FORMAT.length()
             ));
 
+            /*
+            * ヘッダ、本文、フッタの文字列をone_partとして格納
+             */
             one_part = text.substring(
                     text.indexOf(SPECIFY_BEGIN_FORMAT),
                     text.indexOf(END_FORMAT) + END_FORMAT.length());
 
+            /*
+            * NGSFヘッダの解析結果にTYPE=CHOICEの式があるか確認する
+             */
             if(object.get("TYPE").equals("CHOICE")){
+                /*
+                * もしもあれば、本文だけとりだして格納
+                 */
                 builder.append(NGSFUtility.getInside(one_part));
             }else{
+                /*
+                * なければ、NGSFヘッダフッタごとbuilderに入れる
+                 */
                 builder.append(one_part);
             }
 
-            text = text.substring(one_part.length());
+            /*
+            * textは縮小
+             */
+            text = text.substring(text.indexOf(END_FORMAT) + END_FORMAT.length());
+        }
+
+        /*
+        * 余った文字列も格納
+         */
+        if(text.length() > 0){
+            builder.append(text);
         }
 
         return builder.toString();
     }
 
+    /**
+     * keyHandlerメソッド
+     * 親クラスよりオーバーライド
+     * 選択肢の場合、UPやDOWNの判定も行う必要があるため定義を行う
+     * @param controller ゲームコントローラ こいつに定義されたメソッドを使用できるように渡されている
+     * @param event キーイベント
+     */
     @Override
     public void keyHandler(GameController controller, KeyEvent event){
         switch(event.getCode()){
