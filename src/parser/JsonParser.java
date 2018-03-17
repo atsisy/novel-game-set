@@ -42,13 +42,12 @@ public class JsonParser {
          */
         final JsonObject json = Json.parse(loadWhole(json_path)).asObject();
 
-        ArrayList<String> text_array = new ArrayList<>();
-
         /*
         * それぞれのシーンでforEachする
          */
         json.get("Scenes").asArray().forEach(jsonValue -> {
             final JsonObject local_json = jsonValue.asObject();
+            ArrayList<String> text_array = new ArrayList<>();
 
             /*
             * textsを取り出す
