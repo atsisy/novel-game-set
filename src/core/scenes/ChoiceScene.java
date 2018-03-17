@@ -2,7 +2,6 @@ package core.scenes;
 
 import core.FontData;
 import core.GameController;
-import core.HighGradeText;
 import core.SceneBasicInfo;
 import javafx.scene.input.KeyEvent;
 import parser.HighGradeTextInterpreter;
@@ -76,13 +75,33 @@ public class ChoiceScene extends ScenePart {
         return next_scene_table.get(selected_item_id);
     }
 
+    /**
+     * collectChoiceItemメソッド
+     * 本文全体をChoiceItemのArrayListにパースします
+     * @param text 本文全体
+     * @return パース後のArrayList
+     */
     private static ArrayList<ChoiceItem> collectChoiceItem(String text){
         ArrayList<ChoiceItem> items = new ArrayList<>();
+
+        /*
+        * [|END|]がなくなるまでループ
+        * textは段々と切り取られるため、いつかはなくなる
+         */
         while(text.contains(END_FORMAT)){
-            int begin_text = text.indexOf(SPECIFY_END_FORMAT) + SPECIFY_END_FORMAT.length();
             items.add(
-                    extractChoiceItem(text)
+                    /*
+                    * extractChoiceItemメソッドに任せる
+                    * 渡すのは[|.*+|]ooooooo[|END|]の文字列
+                     */
+                    extractChoiceItem(
+                            text.substring(0, text.indexOf(END_FORMAT) + END_FORMAT.length())
+                    )
             );
+
+            /*
+            * 処理済みのものは切り取る
+             */
             text = text.substring(text.indexOf(END_FORMAT) + END_FORMAT.length());
         }
 
@@ -91,15 +110,21 @@ public class ChoiceScene extends ScenePart {
 
     /**
      * extractChoiceItemメソッド
-     *
+     * [|.*+|]ooooooo[|END|] この形式を渡してください。 ChoiceItemに変換します。
      * @param text_part
      * @return
      */
     private static ChoiceItem extractChoiceItem(String text_part){
-        int begin_text = text_part.indexOf(SPECIFY_END_FORMAT) + SPECIFY_END_FORMAT.length();
-        NGSFormatObject ngsf_object = NGSFormatObject.parseNGSFormat(text_part.substring(0, begin_text));
+        NGSFormatObject ngsf_object = NGSFormatObject.parseNGSFormat(text_part);
+
+        /*
+        * ChoiceItemのインスタンス生成
+        * 第一引数: 本文のみを抽出している。 ヘッダ終了インデックス TO フッタ開始インデックスまでの文字列
+        * 第二引数: CHOICEID
+        * 第三引数: この選択肢を選ぶとジャンプするシーンのハッシュ名
+         */
         return new ChoiceItem(
-                text_part.substring(begin_text, text_part.indexOf(END_FORMAT)),
+                text_part.substring(text_part.indexOf(SPECIFY_END_FORMAT) + SPECIFY_END_FORMAT.length(), text_part.indexOf(END_FORMAT)),
                 Integer.valueOf(ngsf_object.get("CHOICEID")),
                 ngsf_object.get("GOTO")
         );
