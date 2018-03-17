@@ -2,13 +2,18 @@
   "Scenes":[
     {
       "texts": [
-        "/home/takai/programs/novel/scene1.txt",
-        "/home/takai/programs/novel/scene2.txt",
         "/home/takai/programs/novel/scene3.txt"
       ],
 
+      "title": "title_test2",
+      "hash-name": "title_test2",
+
+      "type": "choice",
+
       "back-ground": "/home/takai/programs/novel/test.png",
       "bg-display-mode": "CENTER",
+
+      "next-scene-hash": "-END",
 
       "font": {
         "name": "TakaoMincho",

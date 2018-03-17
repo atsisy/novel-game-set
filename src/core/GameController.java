@@ -3,9 +3,11 @@ package core;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import core.scenes.ScenePart;
+import graphic.Layer;
 import graphic.SceneRunner;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import parser.JsonParser;
@@ -64,16 +66,20 @@ public class GameController {
         * Enterキー入力時の動作
          */
         this.scene.setOnKeyReleased(event -> {
-            if(isProceedKey(event.getCode())){
-                if(next().eqauls(SceneRunner.Status.FINISH)){
-                    current_scene_hash = primary_scene.nextSceneHash();
-                    nextScene();
-                }
-            }else if(isBackKey(event.getCode())){
-                back();
-            }
+            primary_scene.keyHandler(this, event);
         });
 
+    }
+
+    public void defaultKeyAction(KeyEvent event){
+        if(isProceedKey(event.getCode())){
+            if(next().eqauls(SceneRunner.Status.FINISH)){
+                current_scene_hash = primary_scene.nextSceneHash();
+                nextScene();
+            }
+        }else if(isBackKey(event.getCode())){
+            back();
+        }
     }
 
     private boolean isProceedKey(KeyCode code){
@@ -202,5 +208,9 @@ public class GameController {
         current_scene_hash = json.get("first-scene-hash").asString().hashCode();
 
         return json_sp_paths;
+    }
+
+    public Layer getFreeLayer(){
+        return sceneRunner.getFreeLayer();
     }
 }

@@ -1,8 +1,10 @@
 package core.scenes;
 
 import core.FontData;
+import core.GameController;
 import core.HighGradeText;
 import core.SceneBasicInfo;
+import javafx.scene.input.KeyEvent;
 import parser.HighGradeTextInterpreter;
 import parser.JsonParser;
 import parser.ngsf.NGSFUtility;
@@ -20,7 +22,16 @@ public class ChoiceScene extends ScenePart {
 
     private HashMap<Integer, Integer> next_scene_table;
     private ArrayList<ChoiceItem> choice_items;
+
+    /*
+    * 選ばれたメニューのCHOICEID
+     */
     private int selected_item_id;
+
+    /*
+    * 選ばれているメニューの上からのインデックス
+     */
+    private int selecting_id;
 
     public ChoiceScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, Optional<String> bgm_path){
         /*
@@ -36,7 +47,10 @@ public class ChoiceScene extends ScenePart {
                 .map(JsonParser::loadWhole)
                 .map(whole_str -> {
                     ArrayList<ChoiceItem> tmp = collectChoiceItem(whole_str);
-                    tmp.forEach(choiceItem -> next_scene_table.put(choiceItem.getChoiceID(), choiceItem.getNextSceneHash()));
+                    tmp.forEach(choiceItem -> {
+                        next_scene_table.put(choiceItem.getChoiceID(), choiceItem.getNextSceneHash());
+                        choice_items.add(choiceItem);
+                    });
                     return removeChoiceNGSF(whole_str);
                 }).map(value -> {
             /*
@@ -48,6 +62,8 @@ public class ChoiceScene extends ScenePart {
             return interpreter.parseToHighGradeText(value);
         })
         .forEach(text_array::add);
+
+        selecting_id = 0;
 
         /*
          * シーンタイプはチョイス(選択肢)
@@ -109,6 +125,24 @@ public class ChoiceScene extends ScenePart {
         }
 
         return builder.toString();
+    }
+
+    @Override
+    public void keyHandler(GameController controller, KeyEvent event){
+        switch(event.getCode()){
+            case UP:
+                selecting_id--;
+                selecting_id = (selecting_id + choice_items.size()) % choice_items.size();
+                break;
+            case DOWN:
+                selecting_id++;
+                selecting_id = (selecting_id + choice_items.size()) % choice_items.size();
+                break;
+            case ENTER:
+                selected_item_id = choice_items.get(selecting_id).getChoiceID();
+                controller.defaultKeyAction(event);
+                break;
+        }
     }
 
 }

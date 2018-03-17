@@ -10,6 +10,7 @@ public class SceneRunner {
 
     private Layer backGroundImageLayer;
     private Layer TextLayer;
+    private Layer freeLayer;
 
     public enum Status {
         IN_PROCESS,
@@ -27,6 +28,7 @@ public class SceneRunner {
          */
         backGroundImageLayer = new Layer(width, height);
         TextLayer = new Layer(width, height);
+        freeLayer = new Layer(width, height);
 
         /*
         * AnchorPaneに登録
@@ -37,9 +39,12 @@ public class SceneRunner {
         AnchorPane.setLeftAnchor(backGroundImageLayer.getCanvas(), 0.0);
         AnchorPane.setTopAnchor(TextLayer.getCanvas(), 0.0);
         AnchorPane.setLeftAnchor(TextLayer.getCanvas(), 0.0);
+        AnchorPane.setTopAnchor(freeLayer.getCanvas(), 0.0);
+        AnchorPane.setLeftAnchor(freeLayer.getCanvas(), 0.0);
 
         backGroundImageLayer.toBack();
         TextLayer.toFront();
+        freeLayer.toFront();
 
     }
 
@@ -89,4 +94,7 @@ public class SceneRunner {
         TextLayer.clear();
     }
 
+    public Layer getFreeLayer() {
+        return freeLayer;
+    }
 }

@@ -2,10 +2,15 @@
   "Scenes":[
     {
       "texts": [
-        "/home/takai/programs/novel/scene1.txt",
-        "/home/takai/programs/novel/scene2.txt",
-        "/home/takai/programs/novel/scene3.txt"
+        "/home/takai/programs/novel/scene1.txt"
       ],
+
+      "title": "title_test1",
+      "hash-name": "title_test1",
+
+      "type": "plain",
+
+      "next-scene-hash": "title_test2",
 
       "back-ground": "/home/takai/programs/novel/test.png",
       "bg-display-mode": "CENTER",
@@ -16,7 +21,55 @@
         "color": "#050505"
       },
 
-      "bgm": "/home/takai/Music/loli_witch/lovelyflower.wav"
+      "bgm": "/home/takai/Downloads/kirisamenokanata.mp3"
+    },
+
+    {
+      "texts": [
+        "/home/takai/programs/novel/scene2.txt"
+      ],
+
+      "title": "title_test3",
+      "hash-name": "title_test3",
+
+      "next-scene-hash": "title_test1",
+
+      "type": "plain",
+
+      "back-ground": "/home/takai/programs/novel/test.png",
+      "bg-display-mode": "CENTER",
+
+      "font": {
+        "name": "TakaoMincho",
+        "size": 20,
+        "color": "#050505"
+      },
+
+      "bgm": "/home/takai/Downloads/kirisamenokanata.mp3"
+    },
+
+    {
+      "texts": [
+        "/home/takai/programs/novel/scene4.txt"
+      ],
+
+      "title": "title_test4",
+      "hash-name": "title_test4",
+
+      "type": "plain",
+
+      "next-scene-hash": "title_test1",
+
+      "back-ground": "/home/takai/programs/novel/test.png",
+      "bg-display-mode": "CENTER",
+
+      "font": {
+        "name": "TakaoMincho",
+        "size": 20,
+        "color": "#050505"
+      },
+
+      "bgm": "/home/takai/Downloads/kirisamenokanata.mp3"
     }
   ]
 }

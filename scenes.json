@@ -2,5 +2,6 @@
   "paths":[
     "./scene1.json",
     "./scene2.json"
-  ]
+  ],
+  "first-scene-hash": "title_test1"
 }
