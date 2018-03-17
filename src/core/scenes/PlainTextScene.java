@@ -64,4 +64,9 @@ public class PlainTextScene extends ScenePart {
         return next_scene_hash;
     }
 
+    @Override
+    public void initHandler(){}
+
+    @Override
+    public void finishHandler(){}
 }

@@ -145,4 +145,12 @@ public class ChoiceScene extends ScenePart {
         }
     }
 
+    @Override
+    public void initHandler(){
+        selecting_id = 0;
+        selected_item_id = 0;
+    }
+
+    @Override
+    public void finishHandler(){}
 }
