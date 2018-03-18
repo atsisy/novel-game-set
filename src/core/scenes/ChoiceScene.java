@@ -3,7 +3,10 @@ package core.scenes;
 import core.FontData;
 import core.GameController;
 import core.SceneBasicInfo;
+import graphic.Layer;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import parser.HighGradeTextInterpreter;
 import parser.JsonParser;
 import parser.ngsf.NGSFUtility;
@@ -149,6 +152,15 @@ public class ChoiceScene extends ScenePart {
             String one_part;
 
             /*
+            * NGSFが来るまでループ。文字はbuilderに入れる
+             */
+            for(char ch : text.toCharArray()){
+                if(ch == '[')
+                    break;
+                builder.append(ch);
+            }
+
+            /*
             * NGSFヘッダ側の文字列を抽出 & 解析
              */
             object = NGSFormatObject.parseNGSFormat(text.substring(
@@ -207,16 +219,26 @@ public class ChoiceScene extends ScenePart {
             case UP:
                 selecting_id--;
                 selecting_id = (selecting_id + choice_items.size()) % choice_items.size();
+                drawRect(controller.getFreeLayer());
                 break;
             case DOWN:
                 selecting_id++;
                 selecting_id = (selecting_id + choice_items.size()) % choice_items.size();
+                drawRect(controller.getFreeLayer());
                 break;
             case ENTER:
                 selected_item_id = choice_items.get(selecting_id).getChoiceID();
                 controller.defaultKeyAction(event);
                 break;
         }
+    }
+
+    private void drawRect(Layer layer){
+        layer.clear();
+        Label label = new Label(choice_items.get(selecting_id).getText());
+        layer.getGraphicsContext().setFont(new Font(20));
+        layer.getGraphicsContext().fillText("____", 20, 20 + (20 * selecting_id));
+        System.out.println(selecting_id);
     }
 
     @Override
