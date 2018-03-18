@@ -4,7 +4,6 @@ import core.FontData;
 import core.GameController;
 import core.SceneBasicInfo;
 import graphic.Layer;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import parser.HighGradeTextInterpreter;
@@ -47,13 +46,12 @@ public class ChoiceScene extends ScenePart {
 
         text_array_paths.stream()
                 .map(JsonParser::loadWhole)
-                .map(whole_str -> {
+                .peek(whole_str -> {
                     ArrayList<ChoiceItem> tmp = collectChoiceItem(whole_str);
                     tmp.forEach(choiceItem -> {
                         next_scene_table.put(choiceItem.getChoiceID(), choiceItem.getNextSceneHash());
                         choice_items.add(choiceItem);
                     });
-                    return removeChoiceNGSF(whole_str);
                 }).map(value -> {
             /*
              * ここでやっていること
@@ -219,12 +217,12 @@ public class ChoiceScene extends ScenePart {
             case UP:
                 selecting_id--;
                 selecting_id = (selecting_id + choice_items.size()) % choice_items.size();
-                drawRect(controller.getFreeLayer());
+                drawPointer(controller.getFreeLayer());
                 break;
             case DOWN:
                 selecting_id++;
                 selecting_id = (selecting_id + choice_items.size()) % choice_items.size();
-                drawRect(controller.getFreeLayer());
+                drawPointer(controller.getFreeLayer());
                 break;
             case ENTER:
                 selected_item_id = choice_items.get(selecting_id).getChoiceID();
@@ -233,20 +231,22 @@ public class ChoiceScene extends ScenePart {
         }
     }
 
-    private void drawRect(Layer layer){
+    private void drawPointer(Layer layer){
         layer.clear();
-        Label label = new Label(choice_items.get(selecting_id).getText());
         layer.getGraphicsContext().setFont(new Font(20));
         layer.getGraphicsContext().fillText("____", 20, 20 + (20 * selecting_id));
         System.out.println(selecting_id);
     }
 
     @Override
-    public void initHandler(){
+    public void initHandler(GameController controller){
         selecting_id = 0;
         selected_item_id = 0;
+        drawPointer(controller.getFreeLayer());
     }
 
     @Override
-    public void finishHandler(){}
+    public void finishHandler(GameController controller){
+        controller.getFreeLayer().clear();
+    }
 }
