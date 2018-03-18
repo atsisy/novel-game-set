@@ -125,12 +125,21 @@ public abstract class ScenePart {
     /**
      * initHandlerメソッド
      * シーン開始時に呼び出される
+     * @param controller
      */
     abstract public void initHandler(GameController controller);
 
     /**
+     * afterFirstDrawingHandlerメソッド
+     * 初回描画処理完了後呼び出される
+     * @param controller
+     */
+    abstract public void afterFirstDrawingHandler(GameController controller);
+
+    /**
      * finishHandlerメソッド
      * シーン終了時に呼び出される
+     * @param controller
      */
     abstract public void finishHandler(GameController controller);
 }

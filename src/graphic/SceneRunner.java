@@ -1,6 +1,5 @@
 package graphic;
 
-import core.scenes.ChoiceItem;
 import core.scenes.ChoiceScene;
 import core.scenes.PlainTextScene;
 import core.scenes.ScenePart;
@@ -86,10 +85,8 @@ public class SceneRunner {
         });
     }
 
-    private void drawChoiceScene(ChoiceScene scene){
-        ChoiceDrawer choiceDrawer = new ChoiceDrawer(20, 20);
-
-        scene.getHighGradeText(0).stream().forEach(highGradeTextPart -> {
+    private void drawChoiceScene(ChoiceScene choice_scene){
+        choice_scene.getHighGradeText(0).stream().forEach(highGradeTextPart -> {
             highGradeTextPart.activeFeatureStream(featureType -> {
                 switch (featureType){
                     case COLOR:
@@ -107,7 +104,7 @@ public class SceneRunner {
                 }
             });
 
-            choiceDrawer.drawChoiceMenu(TextLayer, scene, highGradeTextPart);
+            choice_scene.drawChoiceItem(TextLayer, highGradeTextPart);
         });
     }
 

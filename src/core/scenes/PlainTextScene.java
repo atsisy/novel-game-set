@@ -70,4 +70,7 @@ public class PlainTextScene extends ScenePart {
 
     @Override
     public void finishHandler(GameController controller){}
+
+    @Override
+    public void afterFirstDrawingHandler(GameController controller){}
 }

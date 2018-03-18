@@ -138,6 +138,11 @@ public class GameController {
         sceneRunner.softDraw(primary_scene, local_scene_text_index);
         local_scene_text_index++;
 
+        /****
+         *   Sceneオブジェクト側で自由に定義できる初回描画完了後メソッドを呼び出す
+         ****/
+        primary_scene.afterFirstDrawingHandler(this);
+
         /*
         * 新しいシーンのBGMを再生
          */

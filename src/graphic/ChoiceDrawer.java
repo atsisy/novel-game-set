@@ -1,10 +1,12 @@
 package graphic;
 
+import core.GameController;
 import core.HighGradeTextPart;
 import core.scenes.ChoiceScene;
 import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 public class ChoiceDrawer {
 
@@ -22,4 +24,10 @@ public class ChoiceDrawer {
         left_top_point = left_top_point.add(0, scene.getFont().getSize());
     }
 
+    public void drawPointer(GameController controller, int selecting_index, BiConsumer<Layer, Point2D> draw_pointer_function){
+        draw_pointer_function.accept(
+                controller.getFreeLayer(),
+                choice_menu_point.get(selecting_index)
+        );
+    }
 }

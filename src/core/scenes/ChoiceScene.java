@@ -2,7 +2,9 @@ package core.scenes;
 
 import core.FontData;
 import core.GameController;
+import core.HighGradeTextPart;
 import core.SceneBasicInfo;
+import graphic.ChoiceDrawer;
 import graphic.Layer;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
@@ -11,6 +13,7 @@ import parser.JsonParser;
 import parser.ngsf.NGSFUtility;
 import parser.ngsf.NGSFormatObject;
 
+import javafx.geometry.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -23,6 +26,7 @@ public class ChoiceScene extends ScenePart {
 
     private HashMap<Integer, Integer> next_scene_table;
     private ArrayList<ChoiceItem> choice_items;
+    private ChoiceDrawer drawing_manager;
 
     /*
     * 選ばれたメニューのCHOICEID
@@ -62,6 +66,12 @@ public class ChoiceScene extends ScenePart {
             return interpreter.parseToHighGradeText(value);
         })
         .forEach(text_array::add);
+
+        /*
+        * FIXME
+        * 初期値をJSONから取りたい
+         */
+        drawing_manager = new ChoiceDrawer(20, 20);
 
         selecting_id = 0;
 
@@ -217,12 +227,12 @@ public class ChoiceScene extends ScenePart {
             case UP:
                 selecting_id--;
                 selecting_id = (selecting_id + choice_items.size()) % choice_items.size();
-                drawPointer(controller.getFreeLayer());
+                drawing_manager.drawPointer(controller, selecting_id, this::drawPointer);
                 break;
             case DOWN:
                 selecting_id++;
                 selecting_id = (selecting_id + choice_items.size()) % choice_items.size();
-                drawPointer(controller.getFreeLayer());
+                drawing_manager.drawPointer(controller, selecting_id, this::drawPointer);
                 break;
             case ENTER:
                 selected_item_id = choice_items.get(selecting_id).getChoiceID();
@@ -231,22 +241,33 @@ public class ChoiceScene extends ScenePart {
         }
     }
 
-    private void drawPointer(Layer layer){
+    private void drawPointer(Layer layer, Point2D point2D){
         layer.clear();
         layer.getGraphicsContext().setFont(new Font(20));
-        layer.getGraphicsContext().fillText("____", 20, 20 + (20 * selecting_id));
-        System.out.println(selecting_id);
+        layer.getGraphicsContext().fillText("____", point2D.getX(), point2D.getY());
+    }
+
+    public void drawChoiceItem(Layer layer, HighGradeTextPart highGradeTextPart){
+        drawing_manager.drawChoiceMenu(layer, this, highGradeTextPart);
     }
 
     @Override
     public void initHandler(GameController controller){
         selecting_id = 0;
         selected_item_id = 0;
-        drawPointer(controller.getFreeLayer());
     }
 
     @Override
     public void finishHandler(GameController controller){
         controller.getFreeLayer().clear();
+    }
+
+    /**
+     * afterFirstDrawingHandlerメソッド
+     * 初回描画処理完了後呼び出される
+     * @param controller
+     */
+    public void afterFirstDrawingHandler(GameController controller){
+        drawing_manager.drawPointer(controller, selecting_id, this::drawPointer);
     }
 }
