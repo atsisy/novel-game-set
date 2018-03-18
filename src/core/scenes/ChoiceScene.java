@@ -260,6 +260,7 @@ public class ChoiceScene extends ScenePart {
     @Override
     public void finishHandler(GameController controller){
         controller.getFreeLayer().clear();
+        drawing_manager.clear();
     }
 
     /**
