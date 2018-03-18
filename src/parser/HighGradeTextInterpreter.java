@@ -26,8 +26,10 @@ public class HighGradeTextInterpreter {
 
         /*
         * 指定子が含まれていると、最初の一文がうまくパースできなくなるので、最初にやっておく
+        * indexOfは、該当する文字列が存在しないと、-1を返す。なので、ここではパスすべきで、条件式を満たしている
+        * indexOfで、結果が0の場合、ここで前にくっついた文字列を取り除く必要が無い（そもそも文字列自体無い）ので、条件式を満たしている
          */
-        if(text.contains(SPECIFY_BEGIN_FORMAT)){
+        if(text.indexOf(SPECIFY_BEGIN_FORMAT) > 0){
             highGradeText.addPart(new HighGradeTextPart(text.substring(0, text.indexOf(SPECIFY_BEGIN_FORMAT))));
         }
 

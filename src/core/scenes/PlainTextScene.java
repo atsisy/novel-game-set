@@ -1,6 +1,7 @@
 package core.scenes;
 
 import core.FontData;
+import core.GameController;
 import core.HighGradeText;
 import core.SceneBasicInfo;
 import parser.HighGradeTextInterpreter;
@@ -65,8 +66,8 @@ public class PlainTextScene extends ScenePart {
     }
 
     @Override
-    public void initHandler(){}
+    public void initHandler(GameController controller){}
 
     @Override
-    public void finishHandler(){}
+    public void finishHandler(GameController controller){}
 }

@@ -1,7 +1,9 @@
 package graphic;
 
-import core.BackGroundImage;
-import core.HighGradeText;
+import core.scenes.ChoiceItem;
+import core.scenes.ChoiceScene;
+import core.scenes.PlainTextScene;
+import core.scenes.ScenePart;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -33,7 +35,7 @@ public class SceneRunner {
         /*
         * AnchorPaneに登録
          */
-        root.getChildren().addAll(backGroundImageLayer.getCanvas(), TextLayer.getCanvas());
+        root.getChildren().addAll(backGroundImageLayer.getCanvas(), TextLayer.getCanvas(), freeLayer.getCanvas());
 
         AnchorPane.setTopAnchor(backGroundImageLayer.getCanvas(), 0.0);
         AnchorPane.setLeftAnchor(backGroundImageLayer.getCanvas(), 0.0);
@@ -48,17 +50,22 @@ public class SceneRunner {
 
     }
 
-    public void draw(String text, BackGroundImage bg_image){
-        backGroundImageLayer.getGraphicsContext().drawImage(bg_image.getImage(), 0, 0);
-        TextLayer.getGraphicsContext().fillText(text, 20, 20);
+    public void softDraw(ScenePart scene, int local_index){
+        switch(scene.getSceneType()){
+            case PLAIN_TEXT:
+                drawPlainTextScene((PlainTextScene)scene, local_index);
+                break;
+            case CHOICE:
+                drawChoiceScene((ChoiceScene)scene);
+                break;
+        }
     }
 
-    public void draw(HighGradeText high_text, BackGroundImage bg_image){
-        backGroundImageLayer.getGraphicsContext().drawImage(bg_image.getImage(), 0, 0);
+    private void drawPlainTextScene(PlainTextScene scene, int local_index){
+        backGroundImageLayer.getGraphicsContext().drawImage(scene.getBackGroundImage().getImage(), 0, 0);
         TextDrawer textDrawer = new TextDrawer(20, 20);
 
-
-        high_text.stream().forEach(highGradeTextPart -> {
+        scene.getHighGradeText(local_index).stream().forEach(highGradeTextPart -> {
             highGradeTextPart.activeFeatureStream(featureType -> {
                 switch (featureType){
                     case COLOR:
@@ -76,6 +83,31 @@ public class SceneRunner {
                 }
             });
             textDrawer.draw(TextLayer, highGradeTextPart.getText());
+        });
+    }
+
+    private void drawChoiceScene(ChoiceScene scene){
+        ChoiceDrawer choiceDrawer = new ChoiceDrawer(20, 20);
+
+        scene.getHighGradeText(0).stream().forEach(highGradeTextPart -> {
+            highGradeTextPart.activeFeatureStream(featureType -> {
+                switch (featureType){
+                    case COLOR:
+                        TextLayer.getGraphicsContext().setFill(highGradeTextPart.getColor());
+                        break;
+                    case RUBY:
+                        break;
+                    case TEXT:
+                        /*
+                         * ここでは文字描画処理は行わない
+                         */
+                        break;
+                    case UNKNOWN:
+                        break;
+                }
+            });
+
+            choiceDrawer.drawChoiceMenu(TextLayer, scene, highGradeTextPart);
         });
     }
 
