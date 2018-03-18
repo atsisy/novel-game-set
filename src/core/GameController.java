@@ -74,7 +74,6 @@ public class GameController {
         if(isProceedKey(event.getCode())){
             if(next().eqauls(SceneRunner.Status.FINISH)){
                 current_scene_hash = primary_scene.nextSceneHash();
-                primary_scene.finishHandler();
                 nextScene();
             }
         }else if(isBackKey(event.getCode())){
@@ -119,7 +118,7 @@ public class GameController {
          *   Sceneオブジェクト側で自由に定義できる終了時時メソッドを呼び出す
          ****/
         if(primary_scene != null)
-            primary_scene.finishHandler();
+            primary_scene.finishHandler(this);
 
         /*
          * 最初のシーンを呼び起こし
@@ -129,7 +128,7 @@ public class GameController {
         /****
          *   Sceneオブジェクト側で自由に定義できる開始時メソッドを呼び出す
          ****/
-        primary_scene.initHandler();
+        primary_scene.initHandler(this);
 
         /*
          * このシーンで使用するフォントに設定
