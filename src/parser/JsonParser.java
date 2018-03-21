@@ -7,6 +7,7 @@ import core.SceneBasicInfo;
 import core.scenes.ChoiceScene;
 import core.scenes.PlainTextScene;
 import core.scenes.ScenePart;
+import javafx.geometry.Point2D;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -68,7 +69,11 @@ public class JsonParser {
                     parseFontData(local_json),
                     new SceneBasicInfo(
                             local_json.get("title").asString(),
-                            local_json.get("hash-name").asString()
+                            local_json.get("hash-name").asString(),
+                            new Point2D(
+                                    local_json.get("place").asObject().get("x").asInt(),
+                                    local_json.get("place").asObject().get("y").asInt()
+                                    )
                     ),
                     judgeBGMData(local_json.get("bgm").asString())
             ));

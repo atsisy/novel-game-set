@@ -68,10 +68,9 @@ public class ChoiceScene extends ScenePart {
         .forEach(text_array::add);
 
         /*
-        * FIXME
-        * 初期値をJSONから取りたい
+        * 表示位置はJSONから読み取ったデータで指定
          */
-        drawing_manager = new ChoiceDrawer(20, 20);
+        drawing_manager = new ChoiceDrawer(basicInfo.getTopPoint().getX(), basicInfo.getTopPoint().getY());
 
         selecting_id = 0;
 

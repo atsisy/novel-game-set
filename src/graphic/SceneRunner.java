@@ -12,6 +12,7 @@ public class SceneRunner {
     private Layer backGroundImageLayer;
     private Layer TextLayer;
     private Layer freeLayer;
+    private Layer animationLayer;
 
     public enum Status {
         IN_PROCESS,
@@ -30,23 +31,32 @@ public class SceneRunner {
         backGroundImageLayer = new Layer(width, height);
         TextLayer = new Layer(width, height);
         freeLayer = new Layer(width, height);
+        animationLayer = new Layer(width, height);
 
         /*
         * AnchorPaneに登録
          */
-        root.getChildren().addAll(backGroundImageLayer.getCanvas(), TextLayer.getCanvas(), freeLayer.getCanvas());
+        root.getChildren().addAll(
+                backGroundImageLayer.getCanvas(),
+                TextLayer.getCanvas(),
+                freeLayer.getCanvas(),
+                animationLayer.getCanvas()
+        );
 
-        AnchorPane.setTopAnchor(backGroundImageLayer.getCanvas(), 0.0);
-        AnchorPane.setLeftAnchor(backGroundImageLayer.getCanvas(), 0.0);
-        AnchorPane.setTopAnchor(TextLayer.getCanvas(), 0.0);
-        AnchorPane.setLeftAnchor(TextLayer.getCanvas(), 0.0);
-        AnchorPane.setTopAnchor(freeLayer.getCanvas(), 0.0);
-        AnchorPane.setLeftAnchor(freeLayer.getCanvas(), 0.0);
+        setDefaultPlace(backGroundImageLayer);
+        setDefaultPlace(TextLayer);
+        setDefaultPlace(freeLayer);
+        setDefaultPlace(animationLayer);
 
         backGroundImageLayer.toBack();
         TextLayer.toFront();
         freeLayer.toFront();
 
+    }
+
+    private void setDefaultPlace(Layer layer){
+        AnchorPane.setTopAnchor(layer.getCanvas(), 0.0);
+        AnchorPane.setLeftAnchor(layer.getCanvas(), 0.0);
     }
 
     public void softDraw(ScenePart scene, int local_index){
@@ -62,7 +72,10 @@ public class SceneRunner {
 
     private void drawPlainTextScene(PlainTextScene scene, int local_index){
         backGroundImageLayer.getGraphicsContext().drawImage(scene.getBackGroundImage().getImage(), 0, 0);
-        TextDrawer textDrawer = new TextDrawer(20, 20);
+        TextDrawer textDrawer = new TextDrawer(
+                scene.getPointOfTopDisplayPoint().getX(),
+                scene.getPointOfTopDisplayPoint().getY()
+        );
 
         scene.getHighGradeText(local_index).stream().forEach(highGradeTextPart -> {
             highGradeTextPart.activeFeatureStream(featureType -> {
@@ -124,5 +137,9 @@ public class SceneRunner {
 
     public Layer getFreeLayer() {
         return freeLayer;
+    }
+
+    public Layer getAnimationLayer() {
+        return animationLayer;
     }
 }

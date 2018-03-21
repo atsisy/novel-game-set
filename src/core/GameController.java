@@ -4,6 +4,7 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import core.scenes.ScenePart;
 import graphic.Layer;
+import graphic.SceneChangeAnimation;
 import graphic.SceneRunner;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 
 import static parser.JsonParser.loadWhole;
 
-public class GameController {
+public class GameController implements SceneChangeAnimation {
 
     private ArrayList<ScenePart> sceneParts;
     private HashMap<Integer, ScenePart> scenePartsMap;
@@ -98,11 +99,6 @@ public class GameController {
     private void nextScene(){
 
         /*
-        * 画面消去
-         */
-        sceneRunner.allClear();
-
-        /*
         * シーンが切り替わるため、ローカルのインデックス変数は0に初期化
         * current_sceneはゲーム全部に渡って0に初期化されない
          */
@@ -113,12 +109,9 @@ public class GameController {
          */
         stopPrimarySceneAudio();
 
-
-        /****
-         *   Sceneオブジェクト側で自由に定義できる終了時時メソッドを呼び出す
-         ****/
-        if(primary_scene != null)
+        if(primary_scene != null) {
             primary_scene.finishHandler(this);
+        }
 
         /*
          * 最初のシーンを呼び起こし
@@ -130,39 +123,65 @@ public class GameController {
          ****/
         primary_scene.initHandler(this);
 
-        /*
-         * このシーンで使用するフォントに設定
-         */
-        sceneRunner.setFont(primary_scene.getFont(), primary_scene.getFontColor());
-
-        sceneRunner.softDraw(primary_scene, local_scene_text_index);
-        local_scene_text_index++;
-
         /****
-         *   Sceneオブジェクト側で自由に定義できる初回描画完了後メソッドを呼び出す
+         *   Sceneオブジェクト側で自由に定義できる終了時時メソッドを呼び出す
          ****/
-        primary_scene.afterFirstDrawingHandler(this);
+        if(primary_scene != null) {
+            playFadeOutIn(sceneRunner.getAnimationLayer(), 1000, () -> {
 
-        /*
-        * 新しいシーンのBGMを再生
-         */
-        playPrimarySceneAudio();
+                /*
+                 * 画面消去
+                 */
+                sceneRunner.allClear();
+
+
+                /*
+                 * このシーンで使用するフォントに設定
+                 */
+                sceneRunner.setFont(primary_scene.getFont(), primary_scene.getFontColor());
+
+
+                sceneRunner.softDraw(primary_scene, local_scene_text_index);
+                local_scene_text_index++;
+
+                /****
+                 *   Sceneオブジェクト側で自由に定義できる初回描画完了後メソッドを呼び出す
+                 ****/
+                primary_scene.afterFirstDrawingHandler(this);
+
+                /*
+                 * 新しいシーンのBGMを再生
+                 */
+                playPrimarySceneAudio();
+            }, 10);
+        }
     }
 
     private SceneRunner.Status next(){
 
-        /*
-         * 画面消去
-         */
-        sceneRunner.clearTextLayer();
-
         if(primary_scene.lastIndexOfText() >= local_scene_text_index){
+
+            /*
+             * 画面消去
+             */
+            sceneRunner.clearTextLayer();
+
+
             /*
             * 最期のテキストには到達していない
              */
             sceneRunner.softDraw(primary_scene, local_scene_text_index);
             local_scene_text_index++;
         }else{
+            /*
+            * このシーンは終わりで、次のシーンに移ることになる
+            * この場合、シーン切り替え処理のときにテキストレイヤーは
+            * 削除されることになるので、ここでの画面消去処理は行わない
+            * パフォーマンスの問題もあるが、シーン切り替え前にテキストレイヤー
+            * を消去してしまうと、アニメーションが不自然になってしまう事を防ぐためでもある
+            * (というかそっちが優先)
+             */
+
             return SceneRunner.Status.FINISH;
         }
 

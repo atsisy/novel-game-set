@@ -5,6 +5,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import javafx.geometry.Point2D;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -98,6 +99,10 @@ public abstract class ScenePart {
     @Override
     public int hashCode(){
         return basicInfo.getHash();
+    }
+
+    public Point2D getPointOfTopDisplayPoint(){
+        return basicInfo.getTopPoint();
     }
 
     public SceneType getSceneType() {

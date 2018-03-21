@@ -1,5 +1,7 @@
 package core;
 
+import javafx.geometry.Point2D;
+
 public class SceneBasicInfo {
 
     /*
@@ -18,9 +20,15 @@ public class SceneBasicInfo {
      */
     private int hash;
 
-    public SceneBasicInfo(String title, String hash_name){
+    /*
+    * このシーンにおけるテキスト表示開始座標
+     */
+    private Point2D top_point;
+
+    public SceneBasicInfo(String title, String hash_name, Point2D top_point){
         this.title = title;
         this.hash_name = hash_name;
+        this.top_point = top_point;
         hash = this.hash_name.hashCode();
     }
 
@@ -32,4 +40,7 @@ public class SceneBasicInfo {
         return hash;
     }
 
+    public Point2D getTopPoint() {
+        return top_point;
+    }
 }
