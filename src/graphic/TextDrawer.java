@@ -1,6 +1,9 @@
 package graphic;
 
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.geometry.Point2D;
+import javafx.util.Duration;
 
 public class TextDrawer {
 
@@ -45,11 +48,7 @@ public class TextDrawer {
         /*
         * 文字列を描画
          */
-        layer.getGraphicsContext().fillText(
-                display_string,
-                point.getX(),
-                point.getY()
-                );
+        drawAnimation(layer, text);
 
         /*
         * buiderを初期化
@@ -60,6 +59,34 @@ public class TextDrawer {
         * createAddtionalAlignmentメソッドを使い、space_alignmentを更新
          */
         space_alignment = createAddtionalAlignment(text);
+    }
+
+    private void drawAnimation(Layer layer, String text){
+        Animation animation = new Transition() {
+            {
+
+                /*
+                 * mill_secondかけてアニメーションを行う
+                 */
+                setCycleDuration(Duration.millis(500));
+
+                /*
+                 * 一回のみで十分
+                 */
+                setCycleCount(1);
+
+            }
+            @Override
+            protected void interpolate(double frac) {
+                layer.clear();
+                layer.getGraphicsContext().fillText(
+                        text.substring(0, (int)(text.length() * frac)),
+                        point.getX(),
+                        point.getY()
+                );
+            }
+        };
+        animation.play();
     }
 
     /**
@@ -84,10 +111,8 @@ public class TextDrawer {
         for(char ch : array){
             if(ch == '\n'){
                 builder.append('\n');
-            }if(String.valueOf(ch).getBytes().length < 2) {
-                builder.append(half_space);
             }else{
-                builder.append(full_space);
+                builder.append(getPropSpace(ch));
             }
         }
 
@@ -95,5 +120,30 @@ public class TextDrawer {
         * 文字列を生成して終了
          */
         return builder.toString();
+    }
+
+
+    /**
+     * createAdditionalAlignmentメソッド
+     * @param text 対応した空白の文字列を作るための文字列
+     * @param length 0 ~ lengthまでの文字列が対称となる
+     * @return 空白と改行だけで構成されたアラインメント
+     */
+    private String createAddtionalAlignment(String text, int length){
+        return createAddtionalAlignment(text.substring(0, length));
+    }
+
+    /**
+     * getPropSpaceメソッド
+     * 引数で受けた文字にふさわしいスペースを返すメソッド
+     * @param ch 検証する文字
+     * @return ふさわしいスペース
+     */
+    private char getPropSpace(char ch){
+        if(String.valueOf(ch).getBytes().length < 2) {
+            return half_space;
+        }else{
+            return full_space;
+        }
     }
 }
