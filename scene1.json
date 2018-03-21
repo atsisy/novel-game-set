@@ -21,6 +21,17 @@
         "color": "#050505"
       },
 
+      "place": {
+        "x": 40,
+        "y": 40
+      },
+
+      "animation": {
+        "change-speed": 2000,
+        "change-color": "#050505",
+        "text-speed": 1000
+      },
+
       "bgm": "/home/takai/Downloads/kirisamenokanata.mp3"
     },
 
@@ -39,10 +50,22 @@
       "back-ground": "/home/takai/programs/novel/test.png",
       "bg-display-mode": "CENTER",
 
+      "place": {
+        "x": 20,
+        "y": 20
+      },
+
       "font": {
         "name": "TakaoMincho",
         "size": 20,
         "color": "#050505"
+      },
+
+
+      "animation": {
+        "change-speed": -1,
+        "change-color": "#050505",
+        "text-speed": 100
       },
 
       "bgm": "/home/takai/Downloads/kirisamenokanata.mp3"
@@ -63,10 +86,22 @@
       "back-ground": "/home/takai/programs/novel/test.png",
       "bg-display-mode": "CENTER",
 
+      "place": {
+        "x": 20,
+        "y": 20
+      },
+
       "font": {
         "name": "TakaoMincho",
         "size": 20,
         "color": "#050505"
+      },
+
+
+      "animation": {
+        "change-speed": -1,
+        "change-color": "#050505",
+        "text-speed": 100
       },
 
       "bgm": "/home/takai/Downloads/kirisamenokanata.mp3"

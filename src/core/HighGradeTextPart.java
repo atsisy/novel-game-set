@@ -1,5 +1,6 @@
 package core;
 
+import core.structure.FontData;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;

@@ -1,9 +1,10 @@
 package core.scenes;
 
-import core.FontData;
+import core.structure.FontData;
 import core.GameController;
 import core.HighGradeText;
-import core.SceneBasicInfo;
+import core.structure.SceneAnimationInfo;
+import core.structure.SceneBasicInfo;
 import parser.HighGradeTextInterpreter;
 import parser.JsonParser;
 import parser.TextSeparator;
@@ -15,12 +16,12 @@ public class PlainTextScene extends ScenePart {
 
     private int next_scene_hash;
 
-    public PlainTextScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, Optional<String> bgm_path, int next_scene_hash){
+    public PlainTextScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, Optional<String> bgm_path, int next_scene_hash){
         /*
         * スーパクラスを初期化
         * その後、シーンタイプを設定
          */
-        super(text_array_paths, back_image_path, back_display_mode, fontData, basicInfo, bgm_path);
+        super(text_array_paths, back_image_path, back_display_mode, fontData, basicInfo, animationInfo, bgm_path);
 
         /*
          * すべてのテキストファイルから内容を読み出し、text_arrayに追加

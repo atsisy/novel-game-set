@@ -1,9 +1,10 @@
 package core.scenes;
 
-import core.FontData;
+import core.structure.FontData;
 import core.GameController;
 import core.HighGradeTextPart;
-import core.SceneBasicInfo;
+import core.structure.SceneAnimationInfo;
+import core.structure.SceneBasicInfo;
 import graphic.ChoiceDrawer;
 import graphic.Layer;
 import javafx.scene.input.KeyEvent;
@@ -38,12 +39,12 @@ public class ChoiceScene extends ScenePart {
      */
     private int selecting_id;
 
-    public ChoiceScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, Optional<String> bgm_path){
+    public ChoiceScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, Optional<String> bgm_path){
         /*
          * スーパクラスを初期化
          * その後、シーンタイプを設定
          */
-        super(text_array_paths, back_image_path, back_display_mode, fontData, basicInfo, bgm_path);
+        super(text_array_paths, back_image_path, back_display_mode, fontData, basicInfo, animationInfo, bgm_path);
 
         next_scene_table = new HashMap<>();
         choice_items = new ArrayList<>();

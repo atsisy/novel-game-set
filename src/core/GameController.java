@@ -109,6 +109,10 @@ public class GameController implements SceneChangeAnimation {
          */
         stopPrimarySceneAudio();
 
+
+        /****
+         *   Sceneオブジェクト側で自由に定義できる終了時時メソッドを呼び出す
+         ****/
         if(primary_scene != null) {
             primary_scene.finishHandler(this);
         }
@@ -123,38 +127,43 @@ public class GameController implements SceneChangeAnimation {
          ****/
         primary_scene.initHandler(this);
 
-        /****
-         *   Sceneオブジェクト側で自由に定義できる終了時時メソッドを呼び出す
-         ****/
-        if(primary_scene != null) {
-            playFadeOutIn(sceneRunner.getAnimationLayer(), 1000, () -> {
-
-                /*
-                 * 画面消去
-                 */
-                sceneRunner.allClear();
-
-
-                /*
-                 * このシーンで使用するフォントに設定
-                 */
-                sceneRunner.setFont(primary_scene.getFont(), primary_scene.getFontColor());
-
-
-                sceneRunner.softDraw(primary_scene, local_scene_text_index);
-                local_scene_text_index++;
-
-                /****
-                 *   Sceneオブジェクト側で自由に定義できる初回描画完了後メソッドを呼び出す
-                 ****/
-                primary_scene.afterFirstDrawingHandler(this);
-
-                /*
-                 * 新しいシーンのBGMを再生
-                 */
-                playPrimarySceneAudio();
-            }, 10);
+        if(primary_scene.getAnimationInfo().getChangeTime() < 0){
+            tailProcessOfNextScene();
+        }else{
+            if (primary_scene != null) {
+                playFadeOutIn(
+                        sceneRunner.getAnimationLayer(), primary_scene.getAnimationInfo().getChangeTime(),
+                        this::tailProcessOfNextScene, 10);
+            }
         }
+    }
+
+    private void tailProcessOfNextScene(){
+        /*
+         * 画面消去
+         */
+        sceneRunner.allClear();
+
+
+        /*
+         * このシーンで使用するフォントに設定
+         */
+        sceneRunner.setFont(primary_scene.getFont(), primary_scene.getFontColor());
+
+
+        sceneRunner.softDraw(primary_scene, local_scene_text_index);
+        local_scene_text_index++;
+
+        /****
+         *   Sceneオブジェクト側で自由に定義できる初回描画完了後メソッドを呼び出す
+         ****/
+        primary_scene.afterFirstDrawingHandler(this);
+
+        /*
+         * 新しいシーンのBGMを再生
+         */
+        playPrimarySceneAudio();
+
     }
 
     private SceneRunner.Status next(){

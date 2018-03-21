@@ -2,8 +2,9 @@ package parser;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-import core.FontData;
-import core.SceneBasicInfo;
+import core.structure.FontData;
+import core.structure.SceneAnimationInfo;
+import core.structure.SceneBasicInfo;
 import core.scenes.ChoiceScene;
 import core.scenes.PlainTextScene;
 import core.scenes.ScenePart;
@@ -75,6 +76,7 @@ public class JsonParser {
                                     local_json.get("place").asObject().get("y").asInt()
                                     )
                     ),
+                    new SceneAnimationInfo(local_json.get("animation").asObject()),
                     judgeBGMData(local_json.get("bgm").asString())
             ));
         });
@@ -124,6 +126,7 @@ public class JsonParser {
             String back_display_mode,
             FontData fontData,
             SceneBasicInfo basicInfo,
+            SceneAnimationInfo animationInfo,
             String bgm_path)
     {
         switch(ScenePart.SceneType.strToMe(json_scene_type)){
@@ -134,6 +137,7 @@ public class JsonParser {
                         back_display_mode,
                         fontData,
                         basicInfo,
+                        animationInfo,
                         Optional.ofNullable(bgm_path),
                         local_json_object.get("next-scene-hash").asString().hashCode()
                 );
@@ -144,6 +148,7 @@ public class JsonParser {
                         back_display_mode,
                         fontData,
                         basicInfo,
+                        animationInfo,
                         Optional.ofNullable(bgm_path)
                 );
         }

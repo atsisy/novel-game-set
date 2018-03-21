@@ -94,7 +94,7 @@ public class SceneRunner {
                         break;
                 }
             });
-            textDrawer.draw(TextLayer, highGradeTextPart.getText());
+            textDrawer.draw(TextLayer, scene, highGradeTextPart.getText());
         });
     }
 

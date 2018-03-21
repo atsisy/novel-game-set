@@ -1,6 +1,9 @@
 package core.scenes;
 
 import core.*;
+import core.structure.FontData;
+import core.structure.SceneAnimationInfo;
+import core.structure.SceneBasicInfo;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -41,9 +44,10 @@ public abstract class ScenePart {
     private FontData fontData;
     private AudioPlayer audioPlayer;
     private SceneBasicInfo basicInfo;
+    private SceneAnimationInfo animationInfo;
     protected SceneType scene_type;
 
-    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, Optional<String> bgm_path) {
+    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, Optional<String> bgm_path) {
         /*
         * コンストラクタ
         * JsonParserに実行してもらう
@@ -66,6 +70,11 @@ public abstract class ScenePart {
         * SceneBasicInfoを初期化
          */
         this.basicInfo = basicInfo;
+
+        /*
+        * SceneAnimationInfoを初期化
+         */
+        this.animationInfo = animationInfo;
     }
 
     public HighGradeText getHighGradeText(int index){
@@ -94,6 +103,10 @@ public abstract class ScenePart {
 
     public boolean stopAudio(){
         return audioPlayer.stop();
+    }
+
+    public SceneAnimationInfo getAnimationInfo() {
+        return animationInfo;
     }
 
     @Override

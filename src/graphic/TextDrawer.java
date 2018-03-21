@@ -1,5 +1,7 @@
 package graphic;
 
+import core.scenes.ScenePart;
+import core.structure.SceneAnimationInfo;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point2D;
@@ -35,9 +37,10 @@ public class TextDrawer {
     /**
      * drawメソッド
      * @param layer 書き込むレイヤー
+     * @param scene 書き込みを行うシーン
      * @param text 表示する文字列
      */
-    public void draw(Layer layer, String text){
+    public void draw(Layer layer, ScenePart scene, String text){
         StringBuilder builder = new StringBuilder();
 
         /*
@@ -48,7 +51,7 @@ public class TextDrawer {
         /*
         * 文字列を描画
          */
-        drawAnimation(layer, text);
+        drawAnimation(layer, text, scene.getAnimationInfo());
 
         /*
         * buiderを初期化
@@ -61,14 +64,22 @@ public class TextDrawer {
         space_alignment = createAddtionalAlignment(text);
     }
 
-    private void drawAnimation(Layer layer, String text){
+    private void drawAnimation(Layer layer, String text, SceneAnimationInfo animationInfo){
+        if(animationInfo.getTextDrawTime() < 0){
+            layer.getGraphicsContext().fillText(
+                    text,
+                    point.getX(),
+                    point.getY()
+            );
+            return;
+        }
         Animation animation = new Transition() {
             {
 
                 /*
                  * mill_secondかけてアニメーションを行う
                  */
-                setCycleDuration(Duration.millis(500));
+                setCycleDuration(Duration.millis(animationInfo.getTextDrawTime()));
 
                 /*
                  * 一回のみで十分

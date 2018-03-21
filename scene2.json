@@ -13,12 +13,24 @@
       "back-ground": "/home/takai/programs/novel/test.png",
       "bg-display-mode": "CENTER",
 
+      "place": {
+        "x": 40,
+        "y": 90
+      },
+
       "next-scene-hash": "-END",
 
       "font": {
         "name": "TakaoMincho",
         "size": 20,
         "color": "#050505"
+      },
+
+
+      "animation": {
+        "change-speed": -1,
+        "change-color": "#050505",
+        "text-speed": 100
       },
 
       "bgm": "-NO"
