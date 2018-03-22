@@ -1,6 +1,6 @@
 package parser.ngsf;
 
-import parser.HighGradeTextInterpreter;
+import text.HighGradeTextInterpreter;
 
 public class NGSFUtility {
 
@@ -17,4 +17,12 @@ public class NGSFUtility {
         );
     }
 
+    public static NGSFormatObject parseInlineNGSF(String from_beginning_line){
+        return NGSFormatObject.parseNGSFormat(
+                from_beginning_line.substring(
+                        from_beginning_line.indexOf(HighGradeTextInterpreter.SPECIFY_BEGIN_FORMAT),
+                        from_beginning_line.indexOf(HighGradeTextInterpreter.SPECIFY_END_FORMAT) + HighGradeTextInterpreter.SPECIFY_END_FORMAT.length()
+                )
+        );
+    }
 }

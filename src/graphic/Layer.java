@@ -1,8 +1,11 @@
 package graphic;
 
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.paint.Color;
 
 /**
  * Created by Akihiro on 2017/02/25.
@@ -41,5 +44,13 @@ public class Layer {
     public void toBack(){
         canvas.toBack();
     }
+
+    public void copyFrom(Layer layer) {
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        WritableImage image = layer.canvas.snapshot(params, null);
+        graphicsContext.drawImage(image, 0, 0);
+    }
+
 
 }

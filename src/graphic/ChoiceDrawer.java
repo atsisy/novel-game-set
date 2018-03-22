@@ -1,7 +1,7 @@
 package graphic;
 
 import core.GameController;
-import core.HighGradeTextPart;
+import text.HighGradeTextPart;
 import core.scenes.ChoiceScene;
 import javafx.geometry.Point2D;
 

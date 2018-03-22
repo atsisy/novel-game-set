@@ -1,6 +1,9 @@
-package core;
+package text;
 
 import javafx.scene.paint.Color;
+
+import javafx.geometry.Point2D;
+import text.HighGradeTextPart;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -13,11 +16,17 @@ public class HighGradeText {
 
     private ArrayList<HighGradeTextPart> whole_text;
 
+    private boolean refresh;
     /*
     * コンストラクタはメンバの初期化だけ。具体的な値の挿入は行わない
      */
     public HighGradeText(){
         whole_text = new ArrayList<>();
+
+        /*
+         * refreshはデフォルトで有効
+         */
+        refresh = true;
     }
 
     /*
@@ -55,5 +64,13 @@ public class HighGradeText {
         * Ruby
          */
         whole_text.stream().filter(part -> !part.isExtended(HighGradeTextPart.FeatureType.RUBY)).forEach(conv -> conv.setRuby(""));
+    }
+
+    public void setRefresh(boolean status){
+        this.refresh = status;
+    }
+
+    public boolean isRefreshEnabled() {
+        return refresh;
     }
 }

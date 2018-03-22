@@ -2,10 +2,10 @@ package core.scenes;
 
 import core.structure.FontData;
 import core.GameController;
-import core.HighGradeText;
+import text.HighGradeText;
 import core.structure.SceneAnimationInfo;
 import core.structure.SceneBasicInfo;
-import parser.HighGradeTextInterpreter;
+import text.HighGradeTextInterpreter;
 import parser.JsonParser;
 import parser.TextSeparator;
 
@@ -40,7 +40,11 @@ public class PlainTextScene extends ScenePart {
                     ArrayList<HighGradeText> result = new ArrayList<>();
                     HighGradeTextInterpreter interpreter = new HighGradeTextInterpreter();
 
-                    value.forEach(s -> {result.add(interpreter.parseToHighGradeText(s));});
+                    value.forEach(material -> {
+                        HighGradeText text = interpreter.parseToHighGradeText(material.getText());
+                        text.setRefresh(material.isRefreshEnabled());
+                        result.add(text);
+                    });
                     return result;
                 })
                 .forEach(text_array::addAll);

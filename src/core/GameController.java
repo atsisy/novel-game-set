@@ -111,6 +111,7 @@ public class GameController implements SceneChangeAnimation {
 
 
         /****
+        /****
          *   Sceneオブジェクト側で自由に定義できる終了時時メソッドを呼び出す
          ****/
         if(primary_scene != null) {
@@ -173,7 +174,7 @@ public class GameController implements SceneChangeAnimation {
             /*
              * 画面消去
              */
-            sceneRunner.clearTextLayer();
+            //sceneRunner.clearTextLayer();
 
 
             /*

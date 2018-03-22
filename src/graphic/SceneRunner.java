@@ -1,5 +1,6 @@
 package graphic;
 
+import text.HighGradeText;
 import core.scenes.ChoiceScene;
 import core.scenes.PlainTextScene;
 import core.scenes.ScenePart;
@@ -13,6 +14,9 @@ public class SceneRunner {
     private Layer TextLayer;
     private Layer freeLayer;
     private Layer animationLayer;
+    private Layer cacheLayer;
+
+    private TextDrawer textDrawer;
 
     public enum Status {
         IN_PROCESS,
@@ -32,12 +36,14 @@ public class SceneRunner {
         TextLayer = new Layer(width, height);
         freeLayer = new Layer(width, height);
         animationLayer = new Layer(width, height);
+        cacheLayer = new Layer(width, height);
 
         /*
         * AnchorPaneに登録
          */
         root.getChildren().addAll(
                 backGroundImageLayer.getCanvas(),
+                cacheLayer.getCanvas(),
                 TextLayer.getCanvas(),
                 freeLayer.getCanvas(),
                 animationLayer.getCanvas()
@@ -47,11 +53,14 @@ public class SceneRunner {
         setDefaultPlace(TextLayer);
         setDefaultPlace(freeLayer);
         setDefaultPlace(animationLayer);
+        setDefaultPlace(cacheLayer);
 
         backGroundImageLayer.toBack();
+        cacheLayer.toFront();
         TextLayer.toFront();
         freeLayer.toFront();
 
+        textDrawer = new TextDrawer(0, 0);
     }
 
     private void setDefaultPlace(Layer layer){
@@ -72,12 +81,20 @@ public class SceneRunner {
 
     private void drawPlainTextScene(PlainTextScene scene, int local_index){
         backGroundImageLayer.getGraphicsContext().drawImage(scene.getBackGroundImage().getImage(), 0, 0);
-        TextDrawer textDrawer = new TextDrawer(
-                scene.getPointOfTopDisplayPoint().getX(),
-                scene.getPointOfTopDisplayPoint().getY()
-        );
+        HighGradeText target_text = scene.getHighGradeText(local_index);
 
-        scene.getHighGradeText(local_index).stream().forEach(highGradeTextPart -> {
+
+        if(target_text.isRefreshEnabled()) {
+            textDrawer.reset(
+                    scene.getPointOfTopDisplayPoint().getX(),
+                    scene.getPointOfTopDisplayPoint().getY()
+            );
+
+            cacheLayer.clear();
+            TextLayer.clear();
+        }
+
+        target_text.stream().forEach(highGradeTextPart -> {
             highGradeTextPart.activeFeatureStream(featureType -> {
                 switch (featureType){
                     case COLOR:
@@ -94,7 +111,8 @@ public class SceneRunner {
                         break;
                 }
             });
-            textDrawer.draw(TextLayer, scene, highGradeTextPart.getText());
+            textDrawer.draw(TextLayer, scene, highGradeTextPart.getText(), target_text.isRefreshEnabled());
+            cacheLayer.copyFrom(TextLayer);
         });
     }
 
@@ -141,5 +159,9 @@ public class SceneRunner {
 
     public Layer getAnimationLayer() {
         return animationLayer;
+    }
+
+    public Layer getCacheLayer() {
+        return cacheLayer;
     }
 }

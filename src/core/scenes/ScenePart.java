@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import javafx.geometry.Point2D;
+import text.HighGradeText;
+
 import java.util.ArrayList;
 import java.util.Optional;
 

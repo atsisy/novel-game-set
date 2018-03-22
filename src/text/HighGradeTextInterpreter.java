@@ -1,7 +1,7 @@
-package parser;
+package text;
 
-import core.HighGradeText;
-import core.HighGradeTextPart;
+import text.HighGradeText;
+import text.HighGradeTextPart;
 import parser.ngsf.NGSFormatObject;
 
 public class HighGradeTextInterpreter {

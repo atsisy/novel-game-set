@@ -6,6 +6,7 @@ import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
+import text.HighGradeText;
 
 public class TextDrawer {
 
@@ -34,13 +35,18 @@ public class TextDrawer {
         space_alignment = "";
     }
 
+    public void reset(double x, double y){
+        point = new Point2D(x, y);
+        space_alignment = "";
+    }
+
     /**
      * drawメソッド
      * @param layer 書き込むレイヤー
      * @param scene 書き込みを行うシーン
      * @param text 表示する文字列
      */
-    public void draw(Layer layer, ScenePart scene, String text){
+    public void draw(Layer layer, ScenePart scene, String text, boolean refresh){
         StringBuilder builder = new StringBuilder();
 
         /*
@@ -51,7 +57,7 @@ public class TextDrawer {
         /*
         * 文字列を描画
          */
-        drawAnimation(layer, text, scene.getAnimationInfo());
+        drawAnimation(layer, display_string, scene.getAnimationInfo());
 
         /*
         * buiderを初期化

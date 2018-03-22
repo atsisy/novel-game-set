@@ -1,8 +1,8 @@
-package core;
+package text;
 
 import core.structure.FontData;
 import javafx.scene.paint.Color;
-
+import javafx.geometry.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -19,7 +19,7 @@ public class HighGradeTextPart {
         UNKNOWN;
 
         public static FeatureType strToMe(String str){
-            switch (str){
+            switch (str) {
                 case "COLOR":
                     return COLOR;
                 case "RUBY":
@@ -64,6 +64,7 @@ public class HighGradeTextPart {
         * すべて有効化
          */
         active_feature.addAll(List.of(FeatureType.COLOR, FeatureType.RUBY, FeatureType.TEXT));
+
     }
 
     /*

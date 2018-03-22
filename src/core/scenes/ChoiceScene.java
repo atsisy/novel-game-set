@@ -2,14 +2,14 @@ package core.scenes;
 
 import core.structure.FontData;
 import core.GameController;
-import core.HighGradeTextPart;
+import text.HighGradeTextPart;
 import core.structure.SceneAnimationInfo;
 import core.structure.SceneBasicInfo;
 import graphic.ChoiceDrawer;
 import graphic.Layer;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
-import parser.HighGradeTextInterpreter;
+import text.HighGradeTextInterpreter;
 import parser.JsonParser;
 import parser.ngsf.NGSFUtility;
 import parser.ngsf.NGSFormatObject;
@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static parser.HighGradeTextInterpreter.END_FORMAT;
-import static parser.HighGradeTextInterpreter.SPECIFY_BEGIN_FORMAT;
-import static parser.HighGradeTextInterpreter.SPECIFY_END_FORMAT;
+import static text.HighGradeTextInterpreter.END_FORMAT;
+import static text.HighGradeTextInterpreter.SPECIFY_BEGIN_FORMAT;
+import static text.HighGradeTextInterpreter.SPECIFY_END_FORMAT;
 
 public class ChoiceScene extends ScenePart {
 
