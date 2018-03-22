@@ -80,6 +80,19 @@ public class TextDrawer {
             return;
         }
         Animation animation = new Transition() {
+
+            /*
+            * 先頭の空白部分を覗いた、本来表示するべき有効文字列長を格納する
+             */
+            private int effective_text_length;
+
+            /*
+            * このアニメーションが定義された当時の先頭空白部分の長さ
+            * アニメーションは定義後即座に実行されるものではないので、
+            * このように、当時の空白部分の長さを保持しておく
+             */
+            private int local_space_alignment;
+
             {
 
                 /*
@@ -92,12 +105,21 @@ public class TextDrawer {
                  */
                 setCycleCount(1);
 
+                local_space_alignment = space_alignment.length();
+                effective_text_length = text.length() - local_space_alignment;
+
             }
+
             @Override
             protected void interpolate(double frac) {
                 layer.clear();
                 layer.getGraphicsContext().fillText(
-                        text.substring(0, (int)(text.length() * frac)),
+                        text.substring(0,
+                                /*
+                                * 空白部分を最初から入れて計算する
+                                 */
+                                local_space_alignment + (int)((double)effective_text_length * frac)
+                        ),
                         point.getX(),
                         point.getY()
                 );
