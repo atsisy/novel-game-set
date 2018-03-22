@@ -23,16 +23,25 @@ public class JsonParser {
     private static final String DISABLE_KEYWORD = "-NO";
 
     public static String loadWhole(String file_path){
+
+        String text = null;
+
         /*
         * ファイルをすべて読み込む関数
         * 特にこのクラスに属しているわけではない静的メソッド
          */
         try {
-            return Files.lines(Paths.get(file_path), Charset.forName("UTF-8"))
+            System.out.println("Trying loading file -> " + "\"" + file_path + "\"");
+            text = Files.lines(Paths.get(file_path), Charset.forName("UTF-8"))
                     .collect(Collectors.joining(System.getProperty("line.separator")));
         }catch (IOException e){
-            return "Failed to load file";
+            System.err.println("FAILED TO LOAD FILE -> " + "\"" + file_path + "\"" + " is required.");
+            System.exit(-1);
         }
+
+        System.out.println("Successed to load file -> " + "\"" + file_path + "\"");
+
+        return text;
     }
 
     public static ArrayList<ScenePart> parseToSceneParts(String json_path){
