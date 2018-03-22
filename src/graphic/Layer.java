@@ -52,5 +52,4 @@ public class Layer {
         graphicsContext.drawImage(image, 0, 0);
     }
 
-
 }

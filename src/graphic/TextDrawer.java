@@ -67,7 +67,7 @@ public class TextDrawer {
         /*
         * createAddtionalAlignmentメソッドを使い、space_alignmentを更新
          */
-        space_alignment = createAddtionalAlignment(text);
+        space_alignment = createAddtionalAlignment(display_string);
     }
 
     private void drawAnimation(Layer layer, String text, SceneAnimationInfo animationInfo){
