@@ -2,6 +2,7 @@ package core;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
+import core.scenes.ExitEventScene;
 import core.scenes.ScenePart;
 import graphic.Layer;
 import graphic.SceneChangeAnimation;
@@ -47,6 +48,11 @@ public class GameController implements SceneChangeAnimation {
         json_paths.stream().map(JsonParser::parseToSceneParts).forEach(part -> {
             part.forEach(local_scene -> scenePartsMap.put(local_scene.hashCode(), local_scene));
         });
+        /*
+        * アプリケーション終了用シーンを挿入
+         */
+        ExitEventScene exit_scene = new ExitEventScene();
+        scenePartsMap.put(exit_scene.hashCode(), exit_scene);
 
         /*
         * rootとなるAnchorPaneのインスタンス生成

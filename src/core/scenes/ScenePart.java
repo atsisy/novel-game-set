@@ -79,6 +79,8 @@ public abstract class ScenePart {
         this.animationInfo = animationInfo;
     }
 
+    protected ScenePart(SceneBasicInfo info){ this.basicInfo = info; }
+
     public HighGradeText getHighGradeText(int index){
         return text_array.get(index);
     }
