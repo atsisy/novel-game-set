@@ -101,26 +101,8 @@ public class SceneRunner {
         }
 
         target_text.stream().forEach(highGradeTextPart -> {
-
-            highGradeTextPart.activeFeatureStream(featureType -> {
-                switch (featureType){
-                    case COLOR:
-                        TextLayer.getGraphicsContext().setFill(highGradeTextPart.getColor());
-                        break;
-                    case RUBY:
-                        break;
-                    case TEXT:
-                        /*
-                        * ここでは文字描画処理は行わない
-                         */
-                        break;
-                    case UNKNOWN:
-                        break;
-                }
-            });
-
+            highGradeTextPart.applyFeatures(TextLayer);
             textDrawer.draw(TextLayer, scene, highGradeTextPart, target_text.isRefreshEnabled(), target_text.sizeOfParts());
-            //cacheLayer.copyFrom(TextLayer);
         });
 
         textDrawer.exec_drawing();

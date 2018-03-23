@@ -118,7 +118,6 @@ public class TextDrawer {
             String local_text;
 
             {
-
                 /*
                  * mill_secondかけてアニメーションを行う
                  */
@@ -143,22 +142,7 @@ public class TextDrawer {
 
                 last_index = local_space_alignment + (int)((double)effective_text_length * frac);
 
-                text_part.activeFeatureStream(featureType -> {
-                    switch (featureType){
-                        case COLOR:
-                            layer.getGraphicsContext().setFill(text_part.getColor());
-                            break;
-                        case RUBY:
-                            break;
-                        case TEXT:
-                            /*
-                             * ここでは文字描画処理は行わない
-                             */
-                            break;
-                        case UNKNOWN:
-                            break;
-                    }
-                });
+                text_part.applyFeatures(layer);
 
 
                 layer.getGraphicsContext().fillText(
