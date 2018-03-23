@@ -80,7 +80,11 @@ public class SceneRunner {
     }
 
     private void drawPlainTextScene(PlainTextScene scene, int local_index){
+        /*
+         * 背景画像の描画
+         */
         backGroundImageLayer.getGraphicsContext().drawImage(scene.getBackGroundImage().getImage(), 0, 0);
+
         HighGradeText target_text = scene.getHighGradeText(local_index);
 
 
@@ -122,6 +126,11 @@ public class SceneRunner {
      * @param choice_scene ChoiceSceneオブジェクト
      */
     private void drawChoiceScene(ChoiceScene choice_scene){
+        /*
+        * 背景画像の描画
+         */
+        backGroundImageLayer.getGraphicsContext().drawImage(choice_scene.getBackGroundImage().getImage(), 0, 0);
+
         choice_scene.getHighGradeText(0).stream().forEach(highGradeTextPart -> {
             highGradeTextPart.activeFeatureStream(featureType -> {
                 switch (featureType){
