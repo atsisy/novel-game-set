@@ -6,7 +6,6 @@ import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
-import text.HighGradeText;
 
 public class TextDrawer {
 
@@ -21,6 +20,12 @@ public class TextDrawer {
     private String space_alignment;
 
     /*
+    * テキスト切り替え（SEPARATE）までの描画した文字列を
+    * 保存しておく
+     */
+    private StringBuilder latest_text;
+
+    /*
     * 文字描画のアルゴリズム的に、常に同じ位置から書き始める必要があるため、
     * 位置を記憶しておく
      */
@@ -33,11 +38,18 @@ public class TextDrawer {
     public TextDrawer(double x, double y){
         point = new Point2D(x, y);
         space_alignment = "";
+        latest_text = new StringBuilder();
     }
 
+    /**
+     * TextDrawerオブジェクトを初期化するメソッド
+     * @param x テキスト描画のX座標
+     * @param y テキスト描画のY座標
+     */
     public void reset(double x, double y){
         point = new Point2D(x, y);
         space_alignment = "";
+        latest_text.setLength(0);
     }
 
     /**
@@ -47,22 +59,20 @@ public class TextDrawer {
      * @param text 表示する文字列
      */
     public void draw(Layer layer, ScenePart scene, String text, boolean refresh){
-        StringBuilder builder = new StringBuilder();
+        /*
+        * 新しいテキストを追加
+         */
+        latest_text.append(text);
 
         /*
         * 空白と改行で構成されたalignmentとtextを結合し、これから表示する文字列を作り出す
          */
-        String display_string = builder.append(space_alignment).append(text).toString();
+        String display_string = space_alignment + text;
 
         /*
         * 文字列を描画
          */
         drawAnimation(layer, display_string, scene.getAnimationInfo());
-
-        /*
-        * buiderを初期化
-         */
-        builder.setLength(0);
 
         /*
         * createAddtionalAlignmentメソッドを使い、space_alignmentを更新
@@ -72,6 +82,9 @@ public class TextDrawer {
 
     private void drawAnimation(Layer layer, String text, SceneAnimationInfo animationInfo){
         if(animationInfo.getTextDrawTime() < 0){
+            /*
+            * アニメーションは使用しない
+             */
             layer.getGraphicsContext().fillText(
                     text,
                     point.getX(),
@@ -184,5 +197,18 @@ public class TextDrawer {
         }else{
             return full_space;
         }
+    }
+
+    /**
+     * drawLatestTextメソッド
+     * 現在ウィンドウに表示されているであろう文字列を描画する
+     * @param layer テキストを描画するレイヤー
+     */
+    public void drawLatestText(Layer layer){
+        layer.getGraphicsContext().fillText(
+                latest_text.toString(),
+                point.getX(),
+                point.getY()
+        );
     }
 }

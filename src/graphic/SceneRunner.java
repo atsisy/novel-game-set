@@ -116,6 +116,11 @@ public class SceneRunner {
         });
     }
 
+    /**
+     * drawChoiceSceneメソッド
+     * 選択肢シーンの描画を行う
+     * @param choice_scene ChoiceSceneオブジェクト
+     */
     private void drawChoiceScene(ChoiceScene choice_scene){
         choice_scene.getHighGradeText(0).stream().forEach(highGradeTextPart -> {
             highGradeTextPart.activeFeatureStream(featureType -> {
@@ -137,6 +142,17 @@ public class SceneRunner {
 
             choice_scene.drawChoiceItem(TextLayer, highGradeTextPart);
         });
+    }
+
+    /**
+     * confirmTextメソッド
+     * ウィンドウに描画している文字列を確定するメソッド
+     * 文字列が書ききれない状態に陥ることを防ぐためのメソッド
+     */
+    public void confirmText(){
+        TextLayer.clear();
+        cacheLayer.clear();
+        textDrawer.drawLatestText(TextLayer);
     }
 
     public void setFont(Font font, Color color){

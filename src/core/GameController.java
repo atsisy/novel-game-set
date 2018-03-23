@@ -90,8 +90,15 @@ public class GameController implements SceneChangeAnimation {
         return code.equals(KeyCode.BACK_SPACE) || code.equals(KeyCode.LEFT);
     }
 
+    /**
+     * startメソッド
+     * ゲーム開始後、最初に呼ばれるメソッド
+     */
     public void start(){
 
+        /*
+        * 最初のシーンを呼ぶ
+         */
         nextScene();
 
     }
@@ -139,6 +146,11 @@ public class GameController implements SceneChangeAnimation {
         }
     }
 
+    /**
+     * tailProcessOfNextSceneメソッド
+     * nextSceneメソッドの最後で実行される。
+     * シーン切り替えの間にやっておく必要がある処理を書いておく
+     */
     private void tailProcessOfNextScene(){
         /*
          * 画面消去
@@ -172,10 +184,10 @@ public class GameController implements SceneChangeAnimation {
         if(primary_scene.lastIndexOfText() >= local_scene_text_index){
 
             /*
-             * 画面消去
+            * 新しい文字列の描画を行う前に
+            * 最後に描画していた文字列を確定する
              */
-            //sceneRunner.clearTextLayer();
-
+            sceneRunner.confirmText();
 
             /*
             * 最期のテキストには到達していない
