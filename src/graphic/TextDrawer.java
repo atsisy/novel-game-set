@@ -3,9 +3,14 @@ package graphic;
 import core.scenes.ScenePart;
 import core.structure.SceneAnimationInfo;
 import javafx.animation.Animation;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
+import text.HighGradeText;
+import text.HighGradeTextPart;
+
+import java.util.stream.Stream;
 
 public class TextDrawer {
 
@@ -31,6 +36,7 @@ public class TextDrawer {
      */
     private Point2D point;
 
+    private SequentialTransition draw_process;
     /*
     * space_alignmentは""だけ
     * pointも初期化
@@ -39,6 +45,7 @@ public class TextDrawer {
         point = new Point2D(x, y);
         space_alignment = "";
         latest_text = new StringBuilder();
+        draw_process = new SequentialTransition();
     }
 
     /**
@@ -58,21 +65,21 @@ public class TextDrawer {
      * @param scene 書き込みを行うシーン
      * @param text 表示する文字列
      */
-    public void draw(Layer layer, ScenePart scene, String text, boolean refresh){
+    public void draw(Layer layer, ScenePart scene, HighGradeTextPart text, boolean refresh, int expected_part_size){
         /*
         * 新しいテキストを追加
          */
-        latest_text.append(text);
+        latest_text.append(text.getText());
 
         /*
         * 空白と改行で構成されたalignmentとtextを結合し、これから表示する文字列を作り出す
          */
-        String display_string = space_alignment + text;
+        String display_string = space_alignment + text.getText();
 
         /*
         * 文字列を描画
          */
-        drawAnimation(layer, display_string, scene.getAnimationInfo());
+        addAnimation(layer, display_string, scene.getAnimationInfo(), text, expected_part_size);
 
         /*
         * createAddtionalAlignmentメソッドを使い、space_alignmentを更新
@@ -80,7 +87,7 @@ public class TextDrawer {
         space_alignment = createAddtionalAlignment(display_string);
     }
 
-    private void drawAnimation(Layer layer, String text, SceneAnimationInfo animationInfo){
+    private void addAnimation(Layer layer, String text, SceneAnimationInfo animationInfo, HighGradeTextPart text_part, int expected_size){
         if(animationInfo.getTextDrawTime() < 0){
             /*
             * アニメーションは使用しない
@@ -106,12 +113,16 @@ public class TextDrawer {
              */
             private int local_space_alignment;
 
+
+            int last_index;
+            String local_text;
+
             {
 
                 /*
                  * mill_secondかけてアニメーションを行う
                  */
-                setCycleDuration(Duration.millis(animationInfo.getTextDrawTime()));
+                setCycleDuration(Duration.millis(animationInfo.getTextDrawTime() / expected_size));
 
                 /*
                  * 一回のみで十分
@@ -121,24 +132,63 @@ public class TextDrawer {
                 local_space_alignment = space_alignment.length();
                 effective_text_length = text.length() - local_space_alignment;
 
+                last_index = 0;
+                local_text = new String(text);
+
             }
 
             @Override
             protected void interpolate(double frac) {
-                layer.clear();
+                //layer.clear();
+
+                last_index = local_space_alignment + (int)((double)effective_text_length * frac);
+
+                text_part.activeFeatureStream(featureType -> {
+                    switch (featureType){
+                        case COLOR:
+                            layer.getGraphicsContext().setFill(text_part.getColor());
+                            break;
+                        case RUBY:
+                            break;
+                        case TEXT:
+                            /*
+                             * ここでは文字描画処理は行わない
+                             */
+                            break;
+                        case UNKNOWN:
+                            break;
+                    }
+                });
+
+
                 layer.getGraphicsContext().fillText(
-                        text.substring(0,
+                        local_text.substring(0,
                                 /*
                                 * 空白部分を最初から入れて計算する
                                  */
-                                local_space_alignment + (int)((double)effective_text_length * frac)
+                                last_index
                         ),
                         point.getX(),
                         point.getY()
                 );
+
+                local_text = replaceRange(local_text, local_space_alignment, last_index);
             }
         };
-        animation.play();
+        draw_process.getChildren().add(animation);
+        draw_process.setOnFinished(event -> draw_process.getChildren().clear());
+    }
+
+    public void exec_drawing(){
+        draw_process.play();
+    }
+
+    private String replaceRange(String text, int begin, int end){
+        StringBuilder builder = new StringBuilder();
+        return builder
+                .append(text.substring(0, begin))
+                .append(createAlignmentByRange(text, begin, end))
+                .append(text.substring(end)).toString();
     }
 
     /**
@@ -178,11 +228,12 @@ public class TextDrawer {
     /**
      * createAdditionalAlignmentメソッド
      * @param text 対応した空白の文字列を作るための文字列
-     * @param length 0 ~ lengthまでの文字列が対称となる
+     * @param begin begin ~ endまでの文字列が対称となる
+     * @param end   begin ~ endまでの文字列が対称となる
      * @return 空白と改行だけで構成されたアラインメント
      */
-    private String createAddtionalAlignment(String text, int length){
-        return createAddtionalAlignment(text.substring(0, length));
+    private String createAlignmentByRange(String text, int begin, int end){
+        return createAddtionalAlignment(text.substring(begin, end));
     }
 
     /**

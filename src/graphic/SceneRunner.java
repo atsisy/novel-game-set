@@ -8,6 +8,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
+
 public class SceneRunner {
 
     private Layer backGroundImageLayer;
@@ -99,6 +101,7 @@ public class SceneRunner {
         }
 
         target_text.stream().forEach(highGradeTextPart -> {
+
             highGradeTextPart.activeFeatureStream(featureType -> {
                 switch (featureType){
                     case COLOR:
@@ -115,9 +118,12 @@ public class SceneRunner {
                         break;
                 }
             });
-            textDrawer.draw(TextLayer, scene, highGradeTextPart.getText(), target_text.isRefreshEnabled());
-            cacheLayer.copyFrom(TextLayer);
+
+            textDrawer.draw(TextLayer, scene, highGradeTextPart, target_text.isRefreshEnabled(), target_text.sizeOfParts());
+            //cacheLayer.copyFrom(TextLayer);
         });
+
+        textDrawer.exec_drawing();
     }
 
     /**
