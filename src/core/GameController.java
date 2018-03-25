@@ -31,6 +31,7 @@ public class GameController implements SceneChangeAnimation {
     private Stage stage;
     private AnchorPane root;
     private boolean audio_playing;
+    private boolean keyboard_is_enable;
 
     public GameController(Stage stage, String scenes_path){
 
@@ -68,11 +69,14 @@ public class GameController implements SceneChangeAnimation {
         this.stage = stage;
         stage.setScene(scene);
 
+        keyboard_is_enable = true;
+
         /*
-        * Enterキー入力時の動作
+         * Enterキー入力時の動作
          */
         this.scene.setOnKeyReleased(event -> {
-            primary_scene.keyHandler(this, event);
+            if(keyboard_is_enable)
+                primary_scene.keyHandler(this, event);
         });
 
     }
@@ -170,7 +174,7 @@ public class GameController implements SceneChangeAnimation {
         sceneRunner.setFont(primary_scene.getFont(), primary_scene.getFontColor());
 
 
-        sceneRunner.softDraw(primary_scene, local_scene_text_index);
+        sceneRunner.softDraw(this, primary_scene, local_scene_text_index);
         local_scene_text_index++;
 
         /****
@@ -198,7 +202,7 @@ public class GameController implements SceneChangeAnimation {
             /*
             * 最期のテキストには到達していない
              */
-            sceneRunner.softDraw(primary_scene, local_scene_text_index);
+            sceneRunner.softDraw(this, primary_scene, local_scene_text_index);
             local_scene_text_index++;
         }else{
             /*
@@ -219,6 +223,7 @@ public class GameController implements SceneChangeAnimation {
     private SceneRunner.Status back(){
         if(local_scene_text_index >= 2){
             /*
+        textDrawer.pauseAnimation();
              * 負の数には到達していない
              */
 
@@ -229,7 +234,7 @@ public class GameController implements SceneChangeAnimation {
 
 
             local_scene_text_index -= 2;
-            sceneRunner.softDraw(primary_scene, local_scene_text_index);
+            sceneRunner.softDraw(this, primary_scene, local_scene_text_index);
         }
 
         return SceneRunner.Status.IN_PROCESS;
@@ -275,5 +280,19 @@ public class GameController implements SceneChangeAnimation {
 
     public Layer getFreeLayer(){
         return sceneRunner.getFreeLayer();
+    }
+
+    public void requestKeyEnable(){
+        keyboard_is_enable = true;
+    }
+
+    public void requestKeyDisable(){
+        keyboard_is_enable = false;
+    }
+
+    public void execUnderKeyDisabled(Runnable process){
+        requestKeyDisable();
+        process.run();
+        requestKeyEnable();
     }
 }
