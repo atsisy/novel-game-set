@@ -204,7 +204,7 @@ public class GameController implements SceneChangeAnimation {
             /*
             * 最期のテキストには到達していない
              */
-            sceneRunner.softDraw(this, primary_scene, local_scene_text_index);
+            execUnderKeyDisabled(() -> sceneRunner.softDraw(this, primary_scene, local_scene_text_index));
             local_scene_text_index++;
         }else{
             /*
@@ -244,11 +244,19 @@ public class GameController implements SceneChangeAnimation {
             /*
             * 再描画処理
              */
-            sceneRunner.redrawHighGradeTextByRange(
-                    primary_scene,
-                    primary_scene.lastRefreshText(local_scene_text_index),
-                    local_scene_text_index
-            );
+            execUnderKeyDisabled(() -> {
+                sceneRunner.redrawHighGradeTextByRange(
+                        primary_scene,
+                        primary_scene.lastRefreshText(local_scene_text_index),
+                        local_scene_text_index
+                );
+            });
+
+            /*
+            * アニメーション途中でbackされたときのために
+            * 文字列確定処理を挿入
+             */
+            sceneRunner.confirmText();
 
             /*
             * 次に表示するインデックスをセットしておく必要がある
