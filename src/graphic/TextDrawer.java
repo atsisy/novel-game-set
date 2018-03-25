@@ -246,4 +246,15 @@ public class TextDrawer {
                 point.getY()
         );
     }
+
+    /**
+     * stopAnimationメソッド
+     * 文字列描画アニメーションを終了するメソッド
+     * この時、draw_processに溜まっているアニメーションは破棄される
+     */
+    public void stopAnimation(){
+        draw_process.pause();
+        draw_process.stop();
+        draw_process.getChildren().clear();
+    }
 }

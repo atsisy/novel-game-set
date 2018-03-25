@@ -223,7 +223,7 @@ public class GameController implements SceneChangeAnimation {
     private SceneRunner.Status back(){
         if(local_scene_text_index >= 2){
             /*
-        textDrawer.pauseAnimation();
+        textDrawer.stopAnimation();
              * 負の数には到達していない
              */
 

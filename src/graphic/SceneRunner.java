@@ -1,5 +1,6 @@
 package graphic;
 
+import core.GameController;
 import text.HighGradeText;
 import core.scenes.ChoiceScene;
 import core.scenes.PlainTextScene;
@@ -7,8 +8,6 @@ import core.scenes.ScenePart;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import java.util.ArrayList;
 
 public class SceneRunner {
 
@@ -70,10 +69,10 @@ public class SceneRunner {
         AnchorPane.setLeftAnchor(layer.getCanvas(), 0.0);
     }
 
-    public void softDraw(ScenePart scene, int local_index){
+    public void softDraw(GameController controller, ScenePart scene, int local_index){
         switch(scene.getSceneType()){
             case PLAIN_TEXT:
-                drawPlainTextScene((PlainTextScene)scene, local_index);
+                controller.execUnderKeyDisabled(() -> drawPlainTextScene((PlainTextScene)scene, local_index));
                 break;
             case CHOICE:
                 drawChoiceScene((ChoiceScene)scene);
@@ -147,6 +146,7 @@ public class SceneRunner {
      * 文字列が書ききれない状態に陥ることを防ぐためのメソッド
      */
     public void confirmText(){
+        textDrawer.stopAnimation();
         TextLayer.clear();
         cacheLayer.clear();
         textDrawer.drawLatestText(TextLayer);
