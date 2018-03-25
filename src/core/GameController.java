@@ -128,7 +128,6 @@ public class GameController implements SceneChangeAnimation {
 
 
         /****
-        /****
          *   Sceneオブジェクト側で自由に定義できる終了時時メソッドを呼び出す
          ****/
         if(primary_scene != null) {
@@ -146,6 +145,9 @@ public class GameController implements SceneChangeAnimation {
         primary_scene.initHandler(this);
 
         if(primary_scene.getAnimationInfo().getChangeTime() < 0){
+            /*
+            * アニメーションは使わないので、普通にtailProcessOfNextSceneを実行
+             */
             tailProcessOfNextScene();
         }else{
             if (primary_scene != null) {
@@ -258,6 +260,12 @@ public class GameController implements SceneChangeAnimation {
         }
     }
 
+    /**
+     * extractInitScenesJsonメソッド
+     * scenes.jsonの解析を行う
+     * @param json_path scenes.jsonへのパス
+     * @return scenes.jsonに書かれた各シーンの記述があるJSONへのパス郡
+     */
     private ArrayList<String> extractInitScenesJson(String json_path){
         ArrayList<String> json_sp_paths = new ArrayList<>();
 
@@ -290,6 +298,11 @@ public class GameController implements SceneChangeAnimation {
         keyboard_is_enable = false;
     }
 
+    /**
+     * execUnderKeyDisabledメソッド
+     * キー入力無効化下で実行したい場合、このメソッドにRunnerオブジェクトを渡し実行
+     * @param process その処理
+     */
     public void execUnderKeyDisabled(Runnable process){
         requestKeyDisable();
         process.run();

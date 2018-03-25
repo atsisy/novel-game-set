@@ -28,6 +28,12 @@ public class SceneRunner {
         }
     }
 
+    /**
+     * SceneRunnerクラスのコンストラクタ
+     * @param root   AnchorPane 一番汎用性が高いPaneなので採用
+     * @param width  ウィンドウの幅
+     * @param height ウィンドウの高さ
+     */
     public SceneRunner(AnchorPane root, int width, int height){
 
         /*
@@ -50,17 +56,26 @@ public class SceneRunner {
                 animationLayer.getCanvas()
         );
 
+        /*
+        * 基本的に、(x,y)=(0,0)が基本位置となるので設定
+         */
         setDefaultPlace(backGroundImageLayer);
         setDefaultPlace(TextLayer);
         setDefaultPlace(freeLayer);
         setDefaultPlace(animationLayer);
         setDefaultPlace(cacheLayer);
 
+        /*
+        * レイヤーの位置を調整
+         */
         backGroundImageLayer.toBack();
         cacheLayer.toFront();
         TextLayer.toFront();
         freeLayer.toFront();
 
+        /*
+        * テキスト描画用クラスのインスタンス生成
+         */
         textDrawer = new TextDrawer(0, 0);
     }
 
@@ -80,16 +95,28 @@ public class SceneRunner {
         }
     }
 
+    /**
+     * drawPlainTextSceneメソッド
+     * PlainTextシーンを描画するためのメソッド
+     * @param scene PlainTextSceneオブジェクト
+     * @param local_index 第一引数のオブジェクトにおいて、何番目のHighGradeTextを描画するかの情報
+     */
     private void drawPlainTextScene(PlainTextScene scene, int local_index){
         /*
          * 背景画像の描画
          */
         backGroundImageLayer.getGraphicsContext().drawImage(scene.getBackGroundImage().getImage(), 0, 0);
 
+        /*
+        * 描画するHighGradeTextオブジェクトを取り出し
+         */
         HighGradeText target_text = scene.getHighGradeText(local_index);
 
-
         if(target_text.isRefreshEnabled()) {
+            /*
+            * 取り出したテキストの描画に画面消去が必要な場合
+             */
+
             textDrawer.reset(
                     scene.getPointOfTopDisplayPoint().getX(),
                     scene.getPointOfTopDisplayPoint().getY()
