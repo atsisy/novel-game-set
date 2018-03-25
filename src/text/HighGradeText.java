@@ -73,4 +73,8 @@ public class HighGradeText {
     public boolean isRefreshEnabled() {
         return refresh;
     }
+
+    public int sizeOfParts(){
+        return whole_text.size();
+    }
 }

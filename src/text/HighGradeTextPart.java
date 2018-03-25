@@ -1,6 +1,7 @@
 package text;
 
 import core.structure.FontData;
+import graphic.Layer;
 import javafx.scene.paint.Color;
 import javafx.geometry.Point2D;
 import java.util.ArrayList;
@@ -143,5 +144,21 @@ public class HighGradeTextPart {
      */
     public void activeFeatureStream(Consumer<FeatureType> function){
         active_feature.forEach(function);
+    }
+
+    public void applyFeatures(Layer layer){
+        active_feature.forEach(featureType -> {
+            switch (featureType){
+                case COLOR:
+                    layer.getGraphicsContext().setFill(color);
+                    break;
+                case RUBY:
+                    break;
+                case TEXT:
+                    break;
+                case UNKNOWN:
+                    break;
+            }
+        });
     }
 }
