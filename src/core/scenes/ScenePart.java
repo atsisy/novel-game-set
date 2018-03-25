@@ -127,6 +127,25 @@ public abstract class ScenePart {
     }
 
     /**
+     * lastRefreshTextメソッド
+     * @param primary_index このインデックス以前のHighGradeTextが対象となる
+     * @return primary_index以前のHighGradeTextにおいて、最も近いリフレッシュ有効なHighGradeTextのインデックス
+     */
+    public int lastRefreshText(int primary_index){
+        /*
+        * デクリメントしていく
+        * 0番目はrefresh確定である事を頭に入れて読むこと
+         */
+        for(int i = primary_index; i > 0;i--){
+            if(text_array.get(i).isRefreshEnabled()){
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
      * nextSceneHashメソッド（抽象）
      * シーン切替時に呼び出される。次にジャンプするシーンは、このメソッドの返り値で決定する
      * @return

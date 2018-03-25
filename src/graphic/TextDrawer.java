@@ -1,5 +1,6 @@
 package graphic;
 
+import core.scenes.PlainTextScene;
 import core.scenes.ScenePart;
 import core.structure.SceneAnimationInfo;
 import javafx.animation.Animation;
@@ -10,7 +11,7 @@ import javafx.util.Duration;
 import text.HighGradeText;
 import text.HighGradeTextPart;
 
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 public class TextDrawer {
 
@@ -36,6 +37,9 @@ public class TextDrawer {
      */
     private Point2D point;
 
+    private Redrawer redrawer;
+
+
     private SequentialTransition draw_process;
     /*
     * space_alignmentは""だけ
@@ -46,6 +50,7 @@ public class TextDrawer {
         space_alignment = "";
         latest_text = new StringBuilder();
         draw_process = new SequentialTransition();
+        redrawer = new Redrawer();
     }
 
     /**
@@ -92,11 +97,7 @@ public class TextDrawer {
             /*
             * アニメーションは使用しない
              */
-            layer.getGraphicsContext().fillText(
-                    text,
-                    point.getX(),
-                    point.getY()
-            );
+            justDraw(layer, text);
             return;
         }
         Animation animation = new Transition() {
@@ -144,7 +145,6 @@ public class TextDrawer {
 
                 text_part.applyFeatures(layer);
 
-
                 layer.getGraphicsContext().fillText(
                         local_text.substring(0,
                                 /*
@@ -161,6 +161,22 @@ public class TextDrawer {
         };
         draw_process.getChildren().add(animation);
         draw_process.setOnFinished(event -> draw_process.getChildren().clear());
+    }
+
+    public void drawRedrawingMode(Layer textLayer, PlainTextScene scene, int local_index){
+        HighGradeText target_text = scene.getHighGradeText(local_index);
+        latest_text.append(
+                redrawer.redraw(this, textLayer, target_text)
+        );
+        System.out.println("->" + target_text.toString());
+    }
+
+    public void justDraw(Layer layer, String text){
+        layer.getGraphicsContext().fillText(
+                text,
+                point.getX(),
+                point.getY()
+        );
     }
 
     public void exec_drawing(){
@@ -180,7 +196,7 @@ public class TextDrawer {
      * @param text 対応した空白の文字列を作るための文字列
      * @return 空白と改行だけで構成されたアラインメント
      */
-    private String createAddtionalAlignment(String text){
+    public String createAddtionalAlignment(String text){
         /*
         * 文字列をStringから文字の配列に直す
         * これから配列でループするため、変換を行う
@@ -207,7 +223,6 @@ public class TextDrawer {
          */
         return builder.toString();
     }
-
 
     /**
      * createAdditionalAlignmentメソッド
@@ -240,6 +255,9 @@ public class TextDrawer {
      * @param layer テキストを描画するレイヤー
      */
     public void drawLatestText(Layer layer){
+
+        System.out.println(latest_text.toString());
+
         layer.getGraphicsContext().fillText(
                 latest_text.toString(),
                 point.getX(),
@@ -256,5 +274,13 @@ public class TextDrawer {
         draw_process.pause();
         draw_process.stop();
         draw_process.getChildren().clear();
+    }
+
+    public void standbyRedrawing(){
+        redrawer.reset();
+    }
+
+    public void finalizeRedrawing(){
+        space_alignment = redrawer.getLocalSpaceAlignment();
     }
 }

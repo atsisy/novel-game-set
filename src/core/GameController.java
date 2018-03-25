@@ -234,9 +234,28 @@ public class GameController implements SceneChangeAnimation {
              */
             sceneRunner.clearTextLayer();
 
-
+            /*
+            * 次に表示する文字列のインデックスになっている
+            * 今回、現在の文字列の一つ前まで表示したいので
+            * 2を引く
+             */
             local_scene_text_index -= 2;
-            sceneRunner.softDraw(this, primary_scene, local_scene_text_index);
+
+            /*
+            * 再描画処理
+             */
+            sceneRunner.redrawHighGradeTextByRange(
+                    primary_scene,
+                    primary_scene.lastRefreshText(local_scene_text_index),
+                    local_scene_text_index
+            );
+
+            /*
+            * 次に表示するインデックスをセットしておく必要がある
+            * 今は、次表示すべき文字列のインデックス-1なので、
+            * インクリメントする。
+             */
+            local_scene_text_index++;
         }
 
         return SceneRunner.Status.IN_PROCESS;

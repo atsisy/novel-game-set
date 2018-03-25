@@ -95,6 +95,28 @@ public class SceneRunner {
         }
     }
 
+    public void redrawHighGradeTextByRange(ScenePart scene, int begin_index, int end_index){
+
+        textDrawer.reset(scene.getPointOfTopDisplayPoint().getX(), scene.getPointOfTopDisplayPoint().getY());
+
+        textDrawer.standbyRedrawing();
+
+        System.out.println("fire" + begin_index + ":" + end_index);
+
+        /*
+        * begin == endのときも実行する必要がある
+         */
+        for(int i = begin_index;i <= end_index;i++) {
+            redrawHighGradeText(scene, i);
+        }
+
+        textDrawer.finalizeRedrawing();
+    }
+
+    private void redrawHighGradeText(ScenePart scene, int local_index){
+        textDrawer.drawRedrawingMode(TextLayer, (PlainTextScene)scene, local_index);
+    }
+
     /**
      * drawPlainTextSceneメソッド
      * PlainTextシーンを描画するためのメソッド
@@ -146,23 +168,7 @@ public class SceneRunner {
         backGroundImageLayer.getGraphicsContext().drawImage(choice_scene.getBackGroundImage().getImage(), 0, 0);
 
         choice_scene.getHighGradeText(0).stream().forEach(highGradeTextPart -> {
-            highGradeTextPart.activeFeatureStream(featureType -> {
-                switch (featureType){
-                    case COLOR:
-                        TextLayer.getGraphicsContext().setFill(highGradeTextPart.getColor());
-                        break;
-                    case RUBY:
-                        break;
-                    case TEXT:
-                        /*
-                         * ここでは文字描画処理は行わない
-                         */
-                        break;
-                    case UNKNOWN:
-                        break;
-                }
-            });
-
+            highGradeTextPart.applyFeatures(TextLayer);
             choice_scene.drawChoiceItem(TextLayer, highGradeTextPart);
         });
     }
