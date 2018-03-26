@@ -112,7 +112,7 @@ public class SceneRunner {
     }
 
     private void redrawHighGradeText(ScenePart scene, int local_index){
-        textDrawer.drawRedrawingMode(TextLayer, (PlainTextScene)scene, local_index);
+        textDrawer.drawRedrawingMode(TextLayer, scene, local_index);
     }
 
     /**

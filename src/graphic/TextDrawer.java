@@ -163,7 +163,7 @@ public class TextDrawer {
         draw_process.setOnFinished(event -> draw_process.getChildren().clear());
     }
 
-    public void drawRedrawingMode(Layer textLayer, PlainTextScene scene, int local_index){
+    public void drawRedrawingMode(Layer textLayer, ScenePart scene, int local_index){
         HighGradeText target_text = scene.getHighGradeText(local_index);
         latest_text.append(
                 redrawer.redraw(this, textLayer, target_text)
