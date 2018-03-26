@@ -193,14 +193,14 @@ public class GameController implements SceneChangeAnimation {
 
     private SceneRunner.Status next(){
 
+
+        /*
+         * 新しい文字列の描画を行う前に
+         * 最後に描画していた文字列を確定する
+         */
+        sceneRunner.confirmText(primary_scene, local_scene_text_index - 1);
+
         if(primary_scene.lastIndexOfText() >= local_scene_text_index){
-
-            /*
-            * 新しい文字列の描画を行う前に
-            * 最後に描画していた文字列を確定する
-             */
-            sceneRunner.confirmText(primary_scene, local_scene_text_index - 1);
-
             /*
             * 最期のテキストには到達していない
              */
