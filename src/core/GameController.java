@@ -199,7 +199,7 @@ public class GameController implements SceneChangeAnimation {
             * 新しい文字列の描画を行う前に
             * 最後に描画していた文字列を確定する
              */
-            sceneRunner.confirmText();
+            sceneRunner.confirmText(primary_scene, local_scene_text_index - 1);
 
             /*
             * 最期のテキストには到達していない
@@ -256,9 +256,9 @@ public class GameController implements SceneChangeAnimation {
             * アニメーション途中でbackされたときのために
             * 文字列確定処理を挿入
              */
-            sceneRunner.confirmText();
+            sceneRunner.confirmText(primary_scene, local_scene_text_index);
 
-            /*
+            /*https://github.com/atsisy/coyuri-jc-backend
             * 次に表示するインデックスをセットしておく必要がある
             * 今は、次表示すべき文字列のインデックス-1なので、
             * インクリメントする。

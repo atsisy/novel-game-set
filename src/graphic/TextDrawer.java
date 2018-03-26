@@ -168,7 +168,6 @@ public class TextDrawer {
         latest_text.append(
                 redrawer.redraw(this, textLayer, target_text)
         );
-        System.out.println("->" + target_text.toString());
     }
 
     public void justDraw(Layer layer, String text){

@@ -101,8 +101,6 @@ public class SceneRunner {
 
         textDrawer.standbyRedrawing();
 
-        System.out.println("fire" + begin_index + ":" + end_index);
-
         /*
         * begin == endのときも実行する必要がある
          */
@@ -178,11 +176,20 @@ public class SceneRunner {
      * ウィンドウに描画している文字列を確定するメソッド
      * 文字列が書ききれない状態に陥ることを防ぐためのメソッド
      */
-    public void confirmText(){
+    public void confirmText(ScenePart scene, int primary_index){
         textDrawer.stopAnimation();
         TextLayer.clear();
         cacheLayer.clear();
-        textDrawer.drawLatestText(TextLayer);
+
+        /*
+        * 指定した範囲のHighGradeTextを描画し直す
+         */
+        redrawHighGradeTextByRange(
+                scene,
+                scene.lastRefreshText(primary_index),
+                primary_index
+        );
+
     }
 
     public void setFont(Font font, Color color){
