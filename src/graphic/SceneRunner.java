@@ -181,15 +181,25 @@ public class SceneRunner {
         TextLayer.clear();
         cacheLayer.clear();
 
-        /*
-        * 指定した範囲のHighGradeTextを描画し直す
-         */
-        redrawHighGradeTextByRange(
-                scene,
-                scene.lastRefreshText(primary_index),
-                primary_index
-        );
-
+        switch(scene.getSceneType()){
+            case PLAIN_TEXT:
+                /*
+                 * 指定した範囲のHighGradeTextを描画し直す
+                 */
+                redrawHighGradeTextByRange(
+                        scene,
+                        scene.lastRefreshText(primary_index),
+                        primary_index
+                );
+                break;
+            case CHOICE:
+                /*
+                * 選択肢描画オブジェクトを初期化し、再描画を行う
+                 */
+                ((ChoiceScene)scene).resetChoiceDrawer();
+                drawChoiceScene((ChoiceScene)scene);
+                break;
+        }
     }
 
     public void setFont(Font font, Color color){

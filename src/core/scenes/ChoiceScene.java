@@ -81,6 +81,10 @@ public class ChoiceScene extends ScenePart {
         this.scene_type = SceneType.CHOICE;
     }
 
+    public void resetChoiceDrawer(){
+        drawing_manager.clear();
+    }
+
     @Override
     public int nextSceneHash(){
         return next_scene_table.get(selected_item_id);
