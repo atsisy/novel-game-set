@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class JsonParser {
 
-    private static final String DISABLE_KEYWORD = "-NO";
+    private static final String DISABLE_KEYWORD = "NO";
 
     public static String loadWhole(String file_path){
 
@@ -86,7 +86,7 @@ public class JsonParser {
                                     )
                     ),
                     new SceneAnimationInfo(local_json.get("animation").asObject()),
-                    judgeBGMData(local_json.get("bgm").asString())
+                    local_json.get("bgm").asString()
             ));
         });
 
@@ -109,10 +109,6 @@ public class JsonParser {
                 local_json.get("size").asInt(),
                 local_json.get("color").asString()
         );
-    }
-
-    private static String judgeBGMData(String word){
-        return word.equals(DISABLE_KEYWORD) ? null : word;
     }
 
     /**
@@ -147,7 +143,7 @@ public class JsonParser {
                         fontData,
                         basicInfo,
                         animationInfo,
-                        Optional.ofNullable(bgm_path),
+                        bgm_path,
                         local_json_object.get("next-scene-hash").asString().hashCode()
                 );
             case CHOICE:
@@ -158,7 +154,7 @@ public class JsonParser {
                         fontData,
                         basicInfo,
                         animationInfo,
-                        Optional.ofNullable(bgm_path)
+                        bgm_path
                 );
         }
 

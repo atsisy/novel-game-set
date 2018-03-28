@@ -39,7 +39,7 @@ public class ChoiceScene extends ScenePart {
      */
     private int selecting_id;
 
-    public ChoiceScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, Optional<String> bgm_path){
+    public ChoiceScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, String bgm_path){
         /*
          * スーパクラスを初期化
          * その後、シーンタイプを設定

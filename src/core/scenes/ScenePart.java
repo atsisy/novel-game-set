@@ -5,6 +5,7 @@ import core.structure.FontData;
 import core.structure.SceneAnimationInfo;
 import core.structure.SceneBasicInfo;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -12,7 +13,6 @@ import javafx.geometry.Point2D;
 import text.HighGradeText;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public abstract class ScenePart {
 
@@ -44,12 +44,12 @@ public abstract class ScenePart {
     protected ArrayList<HighGradeText> text_array;
     private BackGroundImage backGroundImage;
     private FontData fontData;
-    private AudioPlayer audioPlayer;
+    private SceneBGM bgm;
     private SceneBasicInfo basicInfo;
     private SceneAnimationInfo animationInfo;
     protected SceneType scene_type;
 
-    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, Optional<String> bgm_path) {
+    public ScenePart(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, String bgm_path) {
         /*
         * コンストラクタ
         * JsonParserに実行してもらう
@@ -66,7 +66,7 @@ public abstract class ScenePart {
         /*
         * audioプレイヤーを初期化
          */
-        audioPlayer = new AudioPlayer(bgm_path);
+        bgm = new SceneBGM(bgm_path);
 
         /*
         * SceneBasicInfoを初期化
@@ -101,16 +101,16 @@ public abstract class ScenePart {
         return fontData.getColor();
     }
 
-    public boolean playAudio(){
-        return audioPlayer.play();
-    }
-
-    public boolean stopAudio(){
-        return audioPlayer.stop();
-    }
-
     public SceneAnimationInfo getAnimationInfo() {
         return animationInfo;
+    }
+
+    public SceneBGM.BGMStatus getBGMStatus(){
+        return bgm.getBgmStatus();
+    }
+
+    public SceneBGM getBGM() {
+        return bgm;
     }
 
     @Override

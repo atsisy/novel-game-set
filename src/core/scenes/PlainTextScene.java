@@ -16,7 +16,7 @@ public class PlainTextScene extends ScenePart {
 
     private int next_scene_hash;
 
-    public PlainTextScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, Optional<String> bgm_path, int next_scene_hash){
+    public PlainTextScene(ArrayList<String> text_array_paths, String back_image_path, String back_display_mode, FontData fontData, SceneBasicInfo basicInfo, SceneAnimationInfo animationInfo, String bgm_path, int next_scene_hash){
         /*
         * スーパクラスを初期化
         * その後、シーンタイプを設定

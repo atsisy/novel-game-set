@@ -5,17 +5,20 @@ import com.eclipsesource.json.JsonObject;
 import core.scenes.ExitEventScene;
 import core.scenes.ScenePart;
 import graphic.Layer;
+import graphic.MusicPlayer;
 import graphic.SceneChangeAnimation;
 import graphic.SceneRunner;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import parser.JsonParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
 
 import static parser.JsonParser.loadWhole;
 
@@ -30,13 +33,12 @@ public class GameController implements SceneChangeAnimation {
     private Scene scene;
     private Stage stage;
     private AnchorPane root;
-    private boolean audio_playing;
+    private MusicPlayer global_audio_player;
     private boolean keyboard_is_enable;
 
     public GameController(Stage stage, String scenes_path){
 
         local_scene_text_index = 0;
-        audio_playing = false;
         sceneParts = new ArrayList<>();
         scenePartsMap = new HashMap<>();
 
@@ -71,6 +73,8 @@ public class GameController implements SceneChangeAnimation {
 
         keyboard_is_enable = true;
 
+        global_audio_player = new MusicPlayer();
+
         /*
          * Enterキー入力時の動作
          */
@@ -78,7 +82,6 @@ public class GameController implements SceneChangeAnimation {
             if(keyboard_is_enable)
                 primary_scene.keyHandler(this, event);
         });
-
     }
 
     public void defaultKeyAction(KeyEvent event){
@@ -121,23 +124,20 @@ public class GameController implements SceneChangeAnimation {
          */
         local_scene_text_index = 0;
 
-        /*
-        * 古いシーンとなるprimary_sceneのBGMを停止
-         */
-        stopPrimarySceneAudio();
-
-
         /****
          *   Sceneオブジェクト側で自由に定義できる終了時時メソッドを呼び出す
          ****/
         if(primary_scene != null) {
             primary_scene.finishHandler(this);
-        }
 
-        /*
-         * 最初のシーンを呼び起こし
-         */
-        primary_scene = scenePartsMap.get(current_scene_hash);
+            execSwapingScene((current, next) -> {
+                if(!next.getBGMStatus().equals(SceneBGM.BGMStatus.KEEP_BGM)) {
+                    global_audio_player.stop();
+                }
+            });
+        }else{
+            execSwapingScene((current, next) -> {});
+        }
 
         /****
          *   Sceneオブジェクト側で自由に定義できる開始時メソッドを呼び出す
@@ -184,10 +184,12 @@ public class GameController implements SceneChangeAnimation {
          ****/
         primary_scene.afterFirstDrawingHandler(this);
 
-        /*
-         * 新しいシーンのBGMを再生
-         */
-        playPrimarySceneAudio();
+        if(primary_scene.getBGMStatus().equals(SceneBGM.BGMStatus.NEW_BGM)) {
+            /*
+             * 新しいシーンのBGMを再生
+             */
+            global_audio_player.play(primary_scene.getBGM());
+        }
 
     }
 
@@ -269,24 +271,6 @@ public class GameController implements SceneChangeAnimation {
         return SceneRunner.Status.IN_PROCESS;
     }
 
-    private void playPrimarySceneAudio(){
-        /*
-        * 他のシーンのBGMが流れているときは、実行しない
-         */
-        if(!audio_playing) {
-            audio_playing = primary_scene.playAudio();
-        }
-    }
-
-    private void stopPrimarySceneAudio(){
-        /*
-        * そもそも音楽が流れていないときは実しない
-         */
-        if(audio_playing) {
-            audio_playing = !primary_scene.stopAudio();
-        }
-    }
-
     /**
      * extractInitScenesJsonメソッド
      * scenes.jsonの解析を行う
@@ -334,5 +318,13 @@ public class GameController implements SceneChangeAnimation {
         requestKeyDisable();
         process.run();
         requestKeyEnable();
+    }
+
+    private void execSwapingScene(BiConsumer<ScenePart, ScenePart> function){
+        ScenePart next_scene = scenePartsMap.get(current_scene_hash);
+
+        function.accept(primary_scene, next_scene);
+
+        primary_scene = next_scene;
     }
 }
