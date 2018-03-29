@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public class SceneBGM {
 
+    /*
+    * BGMの属性を表す列挙体
+     */
     public enum BGMStatus {
         NEW_BGM,
         KEEP_BGM,
@@ -34,6 +37,9 @@ public class SceneBGM {
         bgmStatus = BGMStatus.strToMe(audio_path);
 
         if(bgmStatus.equals(BGMStatus.NEW_BGM)){
+            /*
+            * 新しいBGMを設定する
+             */
             sound = new Media(new File(audio_path).toURI().toString());
         }else{
             sound = null;

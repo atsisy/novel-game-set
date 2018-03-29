@@ -181,6 +181,9 @@ public class SceneRunner {
         TextLayer.clear();
         cacheLayer.clear();
 
+        /*
+        * シーンの属性ごとにテキスト確定処理を変更する
+         */
         switch(scene.getSceneType()){
             case PLAIN_TEXT:
                 /*

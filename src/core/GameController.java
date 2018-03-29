@@ -132,10 +132,19 @@ public class GameController implements SceneChangeAnimation {
 
             execSwapingScene((current, next) -> {
                 if(!next.getBGMStatus().equals(SceneBGM.BGMStatus.KEEP_BGM)) {
+                    /*
+                    * 次のシーンのBGM属性がキープ以外、
+                    * つまり、次のシーンではBGMを止めるか、新しいBGMを流すことになるので
+                    * ここではBGMの終了を行う
+                     */
                     global_audio_player.stop();
                 }
             });
         }else{
+            /*
+            * 現在のシーンがnull
+            * -> 最初の実行だから切り替えだけ
+             */
             execSwapingScene((current, next) -> {});
         }
 
@@ -320,6 +329,12 @@ public class GameController implements SceneChangeAnimation {
         requestKeyEnable();
     }
 
+    /**
+     * execSwapingSceneメソッド
+     * シーン切り替えを実行するメソッド
+     * 第一引数のfunctionとして、切り替えの間に行う処理を記述することができる
+     * @param function シーン切替時に実行される関数。第一引数は以前のシーン。第二引数は、次のシーン
+     */
     private void execSwapingScene(BiConsumer<ScenePart, ScenePart> function){
         ScenePart next_scene = scenePartsMap.get(current_scene_hash);
 
